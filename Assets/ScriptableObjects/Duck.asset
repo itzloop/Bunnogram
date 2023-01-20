@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 704afb14717a3634b93811b724cf3980, type: 3}
   m_Name: Duck
   m_EditorClassIdentifier: 
-  sprite: {fileID: 21300000, guid: 96d325ece108ca447891e5a69e9a2721, type: 3}
+  sprite: {fileID: 21300000, guid: d07bf9e9f3a1c6548987ae7219a32353, type: 3}
   bounds: {x: 6, y: 6}
   backgroundPixels:
   - {x: 0, y: 0}
