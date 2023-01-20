@@ -16,6 +16,7 @@ namespace DefaultNamespace
             public String name { get; set; }
             public String filename { get; set; }
             public bool isPlayed { get; set; }
+            public int levelNumber { get; set; }
 
             public Level(int index, int columnsCount, int rowsCount, string name, bool isPlayed)
             {
@@ -25,6 +26,7 @@ namespace DefaultNamespace
                 this.name = name;
                 this.filename = String.Format("{0} {1}", index, name);
                 this.isPlayed = isPlayed;
+                this.levelNumber = index + 1;
             }
         }
 
@@ -57,7 +59,6 @@ namespace DefaultNamespace
                     //finalPixels[idx] =
                     for (int k = 0; k < mlt; k++)
                     {
-                        
                     }
                 }
             }
@@ -69,7 +70,6 @@ namespace DefaultNamespace
             newTexture.Apply();
             Sprite newSprite = Sprite.Create(newTexture, new Rect(0, 0, newTexture.width, newTexture.height),
                 new Vector2(0.5f, 0.5f));
-            
 
 
             return newSprite;
@@ -101,7 +101,7 @@ namespace DefaultNamespace
 
                 buttonPrefab.name = "Level " + level.index;
                 (buttonPrefab.transform.Find("LevelNumber").GetComponent<Text>()).text =
-                    (level.index).ToString();
+                    (level.levelNumber).ToString();
 
                 if (!level.isPlayed)
                 {
@@ -122,6 +122,7 @@ namespace DefaultNamespace
                     Sprite sprite = Resources.Load<Sprite>("bw-preview/" + level.filename);
                     Image img = (playedTransform.Find("Nonogram").GetComponent<Image>());
                     img.sprite = sprite;
+                    img.preserveAspect = true;
                 }
 
                 buttonPrefab.transform.parent = levelsGrid.transform;
