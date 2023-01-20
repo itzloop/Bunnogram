@@ -119,16 +119,9 @@ namespace DefaultNamespace
                 {
                     Transform playedTransform = buttonPrefab.transform.Find("Played");
                     playedTransform.gameObject.SetActive(true);
-                    Sprite sprite = Resources.Load<Sprite>("bw/" + level.filename);
-
-                    //Debug.Log(level.filename);
-                    //Debug.Log(img.name);
+                    Sprite sprite = Resources.Load<Sprite>("bw-preview/" + level.filename);
                     Image img = (playedTransform.Find("Nonogram").GetComponent<Image>());
-                    //float size = img.rectTransform.rect.height;
-                    //Sprite resized = resizePixels(sprite, size);
                     img.sprite = sprite;
-                    //.sprite =
-                    //Resources.Load<Sprite>("bw/" + level.filename);
                 }
 
                 buttonPrefab.transform.parent = levelsGrid.transform;
