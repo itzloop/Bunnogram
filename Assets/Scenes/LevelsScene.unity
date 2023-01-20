@@ -1252,6 +1252,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: LevelSelector
       objectReference: {fileID: 0}
+    - target: {fileID: 2913412999470054654, guid: b8b561131b4fdbe46957ba1ff1d95bef, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 80
+      objectReference: {fileID: 0}
+    - target: {fileID: 2913412999470054654, guid: b8b561131b4fdbe46957ba1ff1d95bef, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 20
+      objectReference: {fileID: 0}
     - target: {fileID: 3921674496351428265, guid: b8b561131b4fdbe46957ba1ff1d95bef, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -1358,7 +1366,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6839990025554158534, guid: b8b561131b4fdbe46957ba1ff1d95bef, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: -80
       objectReference: {fileID: 0}
     - target: {fileID: 6839990025554158534, guid: b8b561131b4fdbe46957ba1ff1d95bef, type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -1366,7 +1374,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6839990025554158534, guid: b8b561131b4fdbe46957ba1ff1d95bef, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: 40
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 1273253315, guid: b8b561131b4fdbe46957ba1ff1d95bef, type: 3}

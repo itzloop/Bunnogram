@@ -99,7 +99,7 @@ namespace DefaultNamespace
 
                 Button buttonPrefab = Instantiate(levelPrefab);
 
-                buttonPrefab.name = "Level " + level.index;
+                buttonPrefab.name = "Level " + level.levelNumber;
                 (buttonPrefab.transform.Find("LevelNumber").GetComponent<Text>()).text =
                     (level.levelNumber).ToString();
 
@@ -123,6 +123,7 @@ namespace DefaultNamespace
                     Image img = (playedTransform.Find("Nonogram").GetComponent<Image>());
                     img.sprite = sprite;
                     img.preserveAspect = true;
+                    playedTransform.Find("Name").GetComponent<Text>().text = level.name;
                 }
 
                 buttonPrefab.transform.parent = levelsGrid.transform;
