@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class MainMenuGameControl : MonoBehaviour
@@ -18,6 +19,7 @@ public class MainMenuGameControl : MonoBehaviour
     public void OnPlayButtonClick()
     {
         // redirect to levels scene
+        SceneManager.LoadScene(1);
     }
 
     public void OnExitButtonClick()
