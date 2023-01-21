@@ -43,7 +43,7 @@ public class GameStateMono : MonoBehaviour
             GameState.Instance.Store(level, Constants.LevelKey);
             GameState.Instance.Store(pixelatedImage, Constants.PixelatedImageKey);
             GameState.Instance.Store(currentSquareCount, Constants.CurrentSquareKey);
-            GameState.Instance.Store(new ReactiveProperty<bool>(false), Constants.RestartKey);
+           // GameState.Instance.Store(new ReactiveProperty<bool>(false), Constants.RestartKey);
             
             // Win condition
             currentSquareCount.Where(x => x == 0).Subscribe(x =>
@@ -66,7 +66,7 @@ public class GameStateMono : MonoBehaviour
             GameState.Instance.Get<ReactiveProperty<int>>(Constants.HintsCountKey).Value = 3;
             GameState.Instance.Get<ReactiveProperty<ClickMode>>(Constants.ClickModeKey).Value = ClickMode.ForeGroundSelection;
             GameState.Instance.Get<ReactiveProperty<int>>(Constants.CurrentSquareKey).Value = allSquares - backgroundSquares;
-            GameState.Instance.Get<ReactiveProperty<bool>>(Constants.RestartKey).Value = false;
+            //GameState.Instance.Get<ReactiveProperty<bool>>(Constants.RestartKey).Value = false;
         }
 
     }

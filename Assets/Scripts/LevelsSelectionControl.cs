@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using Bunnogram;
 using ScriptableObjects;
+using UniRx;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -101,17 +102,22 @@ namespace DefaultNamespace
                 Sprite nono = Resources.Load<Sprite>("bw/" + level.filename);
                 Sprite previewSprite = Resources.Load<Sprite>("bw-preview/" + level.filename);
 
-                // CreatePixelatedImage(previewSprite, nono, level.levelNumber, level.name);
+                CreatePixelatedImage(previewSprite, nono, level.levelNumber, level.name);
 
                 if (!level.isPlayed)
                 {
                     buttonPrefab.GetComponent<Button>().onClick.AddListener(() =>
                     {
                         // open scene to level i
-                        PixelatedImage px = Resources.Load<PixelatedImage>($"Levels/Level_{level.levelNumber:000}.asset");
-                        
-                        GameState.Instance.Store(px, Constants.PixelatedImageKey);
-                        GameState.Instance.Store(level.levelNumber, Constants.PixelatedImageKey);
+                        //PixelatedImage px = Resources.Load<PixelatedImage>($"Levels");
+                        var pixelatedImage = Resources.Load<PixelatedImage>($"Levels/Level_{level.levelNumber:000}");
+                        Debug.Log(pixelatedImage.levelName);
+                        GameState.Instance.Store(pixelatedImage, Constants.PixelatedImageKey);
+                        GameState.Instance.Store(level.levelNumber, Constants.LevelKey);
+                        var allSquares = pixelatedImage.bounds.x * pixelatedImage.bounds.y;
+                        var backgroundSquares = pixelatedImage.backgroundPixels.Count;
+                        var currentSquareCount = new ReactiveProperty<int>(allSquares - backgroundSquares); // TODO replace with hardcoded value
+                        GameState.Instance.Store(currentSquareCount, Constants.CurrentSquareKey);
                         SceneManager.LoadScene("InGameScene");
                         
                         

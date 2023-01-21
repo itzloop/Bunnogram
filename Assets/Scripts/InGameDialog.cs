@@ -23,11 +23,11 @@ public class InGameDialog : MonoBehaviour
         _image = gameObject.GetComponent<Image>();
         _showed = false;
         
-        GameState.Instance.Get<ReactiveProperty<bool>>(Constants.RestartKey)
-            .Where(x => x).Subscribe(x =>
-            {
-                _showed = false;
-            });
+        // GameState.Instance.Get<ReactiveProperty<bool>>(Constants.RestartKey)
+        //     .Where(x => x).Subscribe(x =>
+        //     {
+        //         _showed = false;
+        //     });
     }
 
     public GameObject SetGameObject(CanvasGroup go)
