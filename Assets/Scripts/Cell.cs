@@ -2,6 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Bunnogram;
+using DG.Tweening;
+using ScriptableObjects;
+using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.XR;
@@ -10,13 +13,23 @@ using Random = UnityEngine.Random;
 [RequireComponent(typeof(Button))]
 public class Cell : MonoBehaviour
 {
+    
+    private enum CellMarkMode {
+        CorrectBackground, CorrectForeground, WrongForeground, WrongBackground
+    }
     private Button _button;
     private Image _image;
     private bool _tint;
     private GameState _state;
 
+    [SerializeField] private Image cross;
+    [SerializeField] private Image background;
+    [SerializeField] private Image square;
+
     public Vector2Int CellCord { get; private set; }
     public bool IsBackground { get; private set; }
+
+    private bool _marked = false;
 
     public void Init(Vector2Int cellCord, List<Vector2Int> backgroundPixelCords)
     {
@@ -48,6 +61,7 @@ public class Cell : MonoBehaviour
 
     private void OnClick()
     {
+        if(_marked) return;
         var cm = GameStateHelper.GetClickMode().Value;
         switch (cm)
         {
@@ -69,22 +83,22 @@ public class Cell : MonoBehaviour
     {
         if (IsBackground)
         {
-            MarkCell();
+            MarkCell(CellMarkMode.CorrectBackground);
             return;
         }
         
-        MarkWrongCell();
+        MarkWrongCell(IsBackground ? CellMarkMode.WrongBackground : CellMarkMode.WrongForeground);
     }
 
     private void HandleForeGroundSelectionMode()
     {
         if (!IsBackground)
         {
-            MarkCell();
+            MarkCell(CellMarkMode.CorrectForeground);
             return;
         }
         
-        MarkWrongCell();
+        MarkWrongCell(IsBackground ? CellMarkMode.WrongBackground : CellMarkMode.WrongForeground);
     }
 
     private void HandleHintMode()
@@ -97,21 +111,46 @@ public class Cell : MonoBehaviour
         }
 
         hints.Value--;
-        MarkCell();
+        MarkCell(IsBackground ? CellMarkMode.CorrectBackground : CellMarkMode.CorrectForeground);
     }
 
-    private void MarkWrongCell()
+    private void MarkWrongCell(CellMarkMode mode)
     {
         var hp = GameStateHelper.GetHealthPoints();
         hp.Value--;
-        Debug.Log("Wrong Cell");
-        MarkCell();
+        MarkCell(mode);
     }
 
-    private void MarkCell()
+    private void MarkCell(CellMarkMode mode)
     {
-        // TODO find a better way for this
-        _image.color = IsBackground ? Color.blue : Color.red;
-        // TODO update left square counts
+        if(_marked) return;
+        _marked = true;
+
+        if (!IsBackground)
+        {
+            _state.Get<ReactiveProperty<int>>(Constants.CurrentSquareKey).Value--;
+        }
+        const float duration = .3f;
+        switch (mode)
+        {
+            case CellMarkMode.CorrectBackground:
+                cross.DOFade(1, duration);
+                break;
+            case CellMarkMode.CorrectForeground:
+                square.DOFade(1, duration);
+                break;
+            case CellMarkMode.WrongForeground:
+                background.DOColor(Color.red, duration).OnComplete(() =>
+                    DOTween.Sequence().Join(background.DOColor(Color.white, duration))
+                        .Join(square.DOFade(1, duration)));
+                break;
+            case CellMarkMode.WrongBackground:
+                background.DOColor(Color.red, duration).OnComplete(() =>
+                    DOTween.Sequence().Join(background.DOColor(Color.white, duration))
+                        .Join(cross.DOFade(1, duration)));
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(mode), mode, null);
+        }
     }
 }
