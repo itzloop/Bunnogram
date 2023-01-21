@@ -1,7 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using ScriptableObjects;
+using UnityEditor;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace DefaultNamespace
@@ -35,44 +39,34 @@ namespace DefaultNamespace
         public GameObject levelsGrid;
         public Button levelPrefab;
 
-        private Sprite resizePixels(Sprite sprite, float size)
+        private void CreatePixelatedImage(Sprite previewSprite, Sprite originalSprite)
         {
-            Color[] pixels = sprite.texture.GetPixels((int)sprite.textureRect.x,
-                (int)sprite.textureRect.y,
-                (int)sprite.textureRect.width,
-                (int)sprite.textureRect.height);
-            int spriteSize = (int)sprite.textureRect.width;
-            int mlt = Mathf.CeilToInt(size / spriteSize);
-            int finalSize = mlt * spriteSize;
+            // bool exists = File.Exists("../ScriptableObjects/" + sprite.name + ".asset");
+            // if (exists)
+            // {
+            //     Debug.Log(sprite.name + " exists");
+            //     return;
+            // };
+            PixelatedImage img = ScriptableObject.CreateInstance<PixelatedImage>();
+            img.sprite = previewSprite;
+            img.bounds = new Vector2Int(originalSprite.texture.width, originalSprite.texture.height);
 
-            Color[] finalPixels = new Color[finalSize * finalSize];
-            int mltto = (finalPixels.Length) / (pixels.Length);
-            var wtv = pixels.SelectMany(px => Enumerable.Repeat(px, mltto).ToArray()).ToArray();
-            List<List<Color>> colorsList = new List<List<Color>>();
-            Color[,] colorsArray = new Color[spriteSize, spriteSize];
-            for (int i = 0; i < spriteSize; i++)
+            List<Vector2Int> backgroundPixels = new List<Vector2Int>();
+            for (int i = 0; i < originalSprite.texture.width; i++)
             {
-                for (int j = 0; j < spriteSize; j++)
+                for (int j = 0; j < originalSprite.texture.height; j++)
                 {
-                    var clr = sprite.texture.GetPixel(i, j);
-                    int idx = i * spriteSize + j;
-                    //finalPixels[idx] =
-                    for (int k = 0; k < mlt; k++)
+                    if (originalSprite.texture.GetPixel(i, j) == Color.white)
                     {
+                        backgroundPixels.Add(new Vector2Int(i, j));
                     }
                 }
             }
 
-
-            var newTexture = new Texture2D(finalSize, finalSize);
-
-            newTexture.SetPixels(finalPixels);
-            newTexture.Apply();
-            Sprite newSprite = Sprite.Create(newTexture, new Rect(0, 0, newTexture.width, newTexture.height),
-                new Vector2(0.5f, 0.5f));
+            img.backgroundPixels = backgroundPixels;
 
 
-            return newSprite;
+            AssetDatabase.CreateAsset(img, "Assets/ScriptableObjects/" + originalSprite.name + ".asset");
         }
 
         private void Start()
@@ -84,7 +78,7 @@ namespace DefaultNamespace
             var columns = 0;
             for (int i = 1; i < lines.Length; i++)
             {
-                if (i > 100)
+                if (i > 50)
                 {
                     break;
                 }
@@ -103,11 +97,20 @@ namespace DefaultNamespace
                 (buttonPrefab.transform.Find("LevelNumber").GetComponent<Text>()).text =
                     (level.levelNumber).ToString();
 
+                Sprite nono = Resources.Load<Sprite>("bw/" + level.filename);
+                Sprite previewSprite = Resources.Load<Sprite>("bw-preview/" + level.filename);
+
+                CreatePixelatedImage(previewSprite, nono);
+
                 if (!level.isPlayed)
                 {
                     buttonPrefab.GetComponent<Button>().onClick.AddListener(() =>
                     {
                         // open scene to level i
+                        SceneManager.LoadScene("InGameScene");
+                        
+                        
+                        
                     });
                     Transform notPlayedTransform = buttonPrefab.transform.Find("NotPlayed");
 
@@ -119,12 +122,12 @@ namespace DefaultNamespace
                 {
                     Transform playedTransform = buttonPrefab.transform.Find("Played");
                     playedTransform.gameObject.SetActive(true);
-                    Sprite sprite = Resources.Load<Sprite>("bw-preview/" + level.filename);
                     Image img = (playedTransform.Find("Nonogram").GetComponent<Image>());
-                    img.sprite = sprite;
+                    img.sprite = previewSprite;
                     img.preserveAspect = true;
                     playedTransform.Find("Name").GetComponent<Text>().text = level.name;
                 }
+
 
                 buttonPrefab.transform.parent = levelsGrid.transform;
                 buttonPrefab.transform.localPosition = new Vector3(0, 0, 0);
