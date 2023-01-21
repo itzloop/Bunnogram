@@ -61,6 +61,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   levelName: {fileID: 3405599757933005439}
+  levelImage: {fileID: 5955303771747391492}
 --- !u!225 &8602570850655698370
 CanvasGroup:
   m_ObjectHideFlags: 0

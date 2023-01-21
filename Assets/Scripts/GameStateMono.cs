@@ -26,7 +26,7 @@ public class GameStateMono : MonoBehaviour
         var healthOb = new ReactiveProperty<int>(3); // TODO replace with hardcoded value
         var hintsOb = new ReactiveProperty<int>(3); // TODO replace with hardcoded value
         var clickModeOb = new ReactiveProperty<ClickMode>(ClickMode.ForeGroundSelection); // TODO replace with hardcoded value
-        var level = new ReactiveProperty<int>(1);
+        var level = new ReactiveProperty<int>(2);
         var pixelatedImage = Resources.Load<PixelatedImage>($"Levels/Level_{level.Value:000}");
 
         var allSquares = pixelatedImage.bounds.x * pixelatedImage.bounds.y;
@@ -49,7 +49,7 @@ public class GameStateMono : MonoBehaviour
             currentSquareCount.Where(x => x == 0).Subscribe(x =>
             {
                 var go = dialog.SetGameObject(winDialog.GetComponent<CanvasGroup>());
-                go.GetComponent<WinDialog>().SetLevelName(pixelatedImage.levelName);
+                go.GetComponent<WinDialog>().SetLevelName(pixelatedImage.levelName, pixelatedImage.sprite);
                 dialog.Show();
             });
 
