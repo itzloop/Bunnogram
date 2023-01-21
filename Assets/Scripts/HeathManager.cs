@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Bunnogram;
+using DG.Tweening;
 using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
@@ -34,7 +35,10 @@ public class HeathManager : MonoBehaviour
         hp.AsObservable().Subscribe(x =>
         {
             if (x == 3) return;
-            _images[x].sprite = emptyHeart;
+            
+            _images[x].DOFade(.1f, .3f)
+                .OnComplete(() => _images[x].DOFade(1, .1f)
+                    .OnStart(() => _images[x].sprite = emptyHeart));
         });
         
     }
