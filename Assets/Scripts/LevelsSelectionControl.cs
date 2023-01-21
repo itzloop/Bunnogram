@@ -54,13 +54,13 @@ namespace DefaultNamespace
             img.bounds = new Vector2Int(originalSprite.texture.width, originalSprite.texture.height);
 
             List<Vector2Int> backgroundPixels = new List<Vector2Int>();
-            for (int i = 0; i < originalSprite.texture.width; i++)
+            for (int i = originalSprite.texture.width - 1; i >= 0; i--)
             {
                 for (int j = 0; j < originalSprite.texture.height; j++)
                 {
                     if (originalSprite.texture.GetPixel(i, j) == Color.white)
                     {
-                        backgroundPixels.Add(new Vector2Int(i, j));
+                        backgroundPixels.Add(new Vector2Int(originalSprite.texture.height - 1 - j, i));
                     }
                 }
             }
@@ -88,7 +88,7 @@ namespace DefaultNamespace
                 // 0-id,1-link,2-name,3-size,4-row,5-col
                 var data = lines[i].Split(',');
 
-                var level = new Level(i - 1, int.Parse(data[5]), int.Parse(data[4]), data[2], i % 2 == 0);
+                var level = new Level(i - 1, int.Parse(data[5]), int.Parse(data[4]), data[2], false);
 
                 listOfLevels.Add(level); // add this list into a big list
 
@@ -99,10 +99,10 @@ namespace DefaultNamespace
                 (buttonPrefab.transform.Find("LevelNumber").GetComponent<Text>()).text =
                     (level.levelNumber).ToString();
 
-                Sprite nono = Resources.Load<Sprite>("bw/" + level.filename);
+                //Sprite nono = Resources.Load<Sprite>("bw/" + level.filename);
                 Sprite previewSprite = Resources.Load<Sprite>("bw-preview/" + level.filename);
 
-                CreatePixelatedImage(previewSprite, nono, level.levelNumber, level.name);
+                //CreatePixelatedImage(previewSprite, nono, level.levelNumber, level.name);
 
                 if (!level.isPlayed)
                 {
@@ -116,12 +116,11 @@ namespace DefaultNamespace
                         GameState.Instance.Store(level.levelNumber, Constants.LevelKey);
                         var allSquares = pixelatedImage.bounds.x * pixelatedImage.bounds.y;
                         var backgroundSquares = pixelatedImage.backgroundPixels.Count;
-                        var currentSquareCount = new ReactiveProperty<int>(allSquares - backgroundSquares); // TODO replace with hardcoded value
+                        var currentSquareCount =
+                            new ReactiveProperty<int>(allSquares -
+                                                      backgroundSquares); // TODO replace with hardcoded value
                         GameState.Instance.Store(currentSquareCount, Constants.CurrentSquareKey);
                         SceneManager.LoadScene("InGameScene");
-                        
-                        
-                        
                     });
                     Transform notPlayedTransform = buttonPrefab.transform.Find("NotPlayed");
 
