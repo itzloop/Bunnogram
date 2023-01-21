@@ -10,17 +10,25 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 704afb14717a3634b93811b724cf3980, type: 3}
-  m_Name: Level_001
+  m_Name: Level_018
   m_EditorClassIdentifier: 
-  sprite: {fileID: 21300000, guid: be5c83d3dbb125b48aa99b66e463dbe4, type: 3}
-  bounds: {x: 4, y: 4}
+  sprite: {fileID: 21300000, guid: 825f63a86b5deb943bab9929468572e4, type: 3}
+  bounds: {x: 5, y: 5}
   backgroundPixels:
+  - {x: 0, y: 0}
   - {x: 0, y: 2}
   - {x: 0, y: 3}
+  - {x: 0, y: 4}
   - {x: 1, y: 0}
   - {x: 1, y: 2}
-  - {x: 1, y: 3}
-  - {x: 3, y: 0}
-  - {x: 3, y: 1}
-  - {x: 3, y: 3}
-  levelName: Tiny Dog
+  - {x: 2, y: 0}
+  - {x: 2, y: 1}
+  - {x: 2, y: 3}
+  - {x: 2, y: 4}
+  - {x: 3, y: 2}
+  - {x: 3, y: 4}
+  - {x: 4, y: 0}
+  - {x: 4, y: 1}
+  - {x: 4, y: 2}
+  - {x: 4, y: 4}
+  levelName: Fan

@@ -12,7 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 704afb14717a3634b93811b724cf3980, type: 3}
   m_Name: Level_002
   m_EditorClassIdentifier: 
-  sprite: {fileID: 0}
-  bounds: {x: 0, y: 0}
-  backgroundPixels: []
-  levelName: 
+  sprite: {fileID: 21300000, guid: 91ea60a6d66770f498d5c37bb078c398, type: 3}
+  bounds: {x: 4, y: 4}
+  backgroundPixels:
+  - {x: 0, y: 0}
+  - {x: 0, y: 2}
+  - {x: 0, y: 3}
+  - {x: 1, y: 2}
+  - {x: 1, y: 3}
+  - {x: 2, y: 0}
+  - {x: 3, y: 0}
+  - {x: 3, y: 1}
+  - {x: 3, y: 2}
+  levelName: Flamingo!

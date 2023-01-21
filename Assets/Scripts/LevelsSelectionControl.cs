@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Bunnogram;
 using ScriptableObjects;
 using UnityEditor;
 using UnityEngine;
@@ -39,7 +40,7 @@ namespace DefaultNamespace
         public GameObject levelsGrid;
         public Button levelPrefab;
 
-        private void CreatePixelatedImage(Sprite previewSprite, Sprite originalSprite)
+        private void CreatePixelatedImage(Sprite previewSprite, Sprite originalSprite, int levelNumber, string name)
         {
             // bool exists = File.Exists("../ScriptableObjects/" + sprite.name + ".asset");
             // if (exists)
@@ -65,8 +66,8 @@ namespace DefaultNamespace
 
             img.backgroundPixels = backgroundPixels;
 
-
-            AssetDatabase.CreateAsset(img, "Assets/ScriptableObjects/" + originalSprite.name + ".asset");
+            img.levelName = name;
+            AssetDatabase.CreateAsset(img, $"Assets/Resources/Levels/Level_{levelNumber:000}.asset");
         }
 
         private void Start()
@@ -78,7 +79,7 @@ namespace DefaultNamespace
             var columns = 0;
             for (int i = 1; i < lines.Length; i++)
             {
-                if (i > 50)
+                if (i > 100)
                 {
                     break;
                 }
@@ -100,13 +101,17 @@ namespace DefaultNamespace
                 Sprite nono = Resources.Load<Sprite>("bw/" + level.filename);
                 Sprite previewSprite = Resources.Load<Sprite>("bw-preview/" + level.filename);
 
-                CreatePixelatedImage(previewSprite, nono);
+                // CreatePixelatedImage(previewSprite, nono, level.levelNumber, level.name);
 
                 if (!level.isPlayed)
                 {
                     buttonPrefab.GetComponent<Button>().onClick.AddListener(() =>
                     {
                         // open scene to level i
+                        PixelatedImage px = Resources.Load<PixelatedImage>($"Levels/Level_{level.levelNumber:000}.asset");
+                        
+                        GameState.Instance.Store(px, Constants.PixelatedImageKey);
+                        GameState.Instance.Store(level.levelNumber, Constants.PixelatedImageKey);
                         SceneManager.LoadScene("InGameScene");
                         
                         
