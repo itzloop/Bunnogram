@@ -16,6 +16,7 @@ namespace DefaultNamespace
     {
         private class Level
         {
+            public  int id { get; set; }
             public int index { get; set; }
             public int columnsCount { get; set; }
             public int rowsCount { get; set; }
@@ -24,13 +25,14 @@ namespace DefaultNamespace
             public bool isPlayed { get; set; }
             public int levelNumber { get; set; }
 
-            public Level(int index, int columnsCount, int rowsCount, string name, bool isPlayed)
+            public Level(int index, int id, int columnsCount, int rowsCount, string name, bool isPlayed)
             {
+                this.id = id;
                 this.index = index;
                 this.columnsCount = columnsCount;
                 this.rowsCount = rowsCount;
                 this.name = name;
-                this.filename = String.Format("{0} {1}", index, name);
+                this.filename = String.Format("{0}-{1}", id, name);
                 this.isPlayed = isPlayed;
                 this.levelNumber = index + 1;
             }
@@ -43,12 +45,6 @@ namespace DefaultNamespace
 
         private void CreatePixelatedImage(Sprite previewSprite, Sprite originalSprite, int levelNumber, string name)
         {
-            // bool exists = File.Exists("../ScriptableObjects/" + sprite.name + ".asset");
-            // if (exists)
-            // {
-            //     Debug.Log(sprite.name + " exists");
-            //     return;
-            // };
             PixelatedImage img = ScriptableObject.CreateInstance<PixelatedImage>();
             img.sprite = previewSprite;
             img.bounds = new Vector2Int(originalSprite.texture.width, originalSprite.texture.height);
@@ -80,7 +76,7 @@ namespace DefaultNamespace
             var columns = 0;
             for (int i = 1; i < lines.Length; i++)
             {
-                if (i > 100)
+                if (i > 10)
                 {
                     break;
                 }
@@ -88,7 +84,7 @@ namespace DefaultNamespace
                 // 0-id,1-link,2-name,3-size,4-row,5-col
                 var data = lines[i].Split(',');
 
-                var level = new Level(i - 1, int.Parse(data[5]), int.Parse(data[4]), data[2], false);
+                var level = new Level(i - 1, int.Parse(data[0]), int.Parse(data[5]), int.Parse(data[4]), data[2], false);
 
                 listOfLevels.Add(level); // add this list into a big list
 
@@ -99,9 +95,10 @@ namespace DefaultNamespace
                 (buttonPrefab.transform.Find("LevelNumber").GetComponent<Text>()).text =
                     (level.levelNumber).ToString();
 
-                //Sprite nono = Resources.Load<Sprite>("bw/" + level.filename);
+                
                 Sprite previewSprite = Resources.Load<Sprite>("bw-preview/" + level.filename);
 
+                //Sprite nono = Resources.Load<Sprite>("bw/" + String.Format("{0} {1}", level.index, level.name));
                 //CreatePixelatedImage(previewSprite, nono, level.levelNumber, level.name);
 
                 if (!level.isPlayed)
@@ -109,17 +106,8 @@ namespace DefaultNamespace
                     buttonPrefab.GetComponent<Button>().onClick.AddListener(() =>
                     {
                         // open scene to level i
-                        //PixelatedImage px = Resources.Load<PixelatedImage>($"Levels");
-                        var pixelatedImage = Resources.Load<PixelatedImage>($"Levels/Level_{level.levelNumber:000}");
-                        Debug.Log(pixelatedImage.levelName);
-                        GameState.Instance.Store(pixelatedImage, Constants.PixelatedImageKey);
-                        GameState.Instance.Store(level.levelNumber, Constants.LevelKey);
-                        var allSquares = pixelatedImage.bounds.x * pixelatedImage.bounds.y;
-                        var backgroundSquares = pixelatedImage.backgroundPixels.Count;
-                        var currentSquareCount =
-                            new ReactiveProperty<int>(allSquares -
-                                                      backgroundSquares); // TODO replace with hardcoded value
-                        GameState.Instance.Store(currentSquareCount, Constants.CurrentSquareKey);
+
+                        GameState.Instance.Update(level.levelNumber, Constants.LevelKey);
                         SceneManager.LoadScene("InGameScene");
                     });
                     Transform notPlayedTransform = buttonPrefab.transform.Find("NotPlayed");

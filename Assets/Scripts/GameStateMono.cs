@@ -26,7 +26,7 @@ public class GameStateMono : MonoBehaviour
         var healthOb = new ReactiveProperty<int>(3); // TODO replace with hardcoded value
         var hintsOb = new ReactiveProperty<int>(3); // TODO replace with hardcoded value
         var clickModeOb = new ReactiveProperty<ClickMode>(ClickMode.ForeGroundSelection); // TODO replace with hardcoded value
-        var level = new ReactiveProperty<int>(2);
+        var level = new ReactiveProperty<int>(5);
         var pixelatedImage = Resources.Load<PixelatedImage>($"Levels/Level_{level.Value:000}");
 
         var allSquares = pixelatedImage.bounds.x * pixelatedImage.bounds.y;

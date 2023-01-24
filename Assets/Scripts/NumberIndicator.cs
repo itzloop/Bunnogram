@@ -27,6 +27,7 @@ public class NumberIndicator : MonoBehaviour
         rectTransform.offsetMin = new Vector2(rectTransform.offsetMin.x, offset);
         var horizontalLayoutGroup = rectTransform.gameObject.AddComponent<HorizontalLayoutGroup>();
         horizontalLayoutGroup.childAlignment = TextAnchor.MiddleRight;
+        horizontalLayoutGroup.padding.right = 20;
         horizontalLayoutGroup.childForceExpandWidth = false;
     }
 

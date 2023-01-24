@@ -67,15 +67,15 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\u06F1"
   m_isRightToLeft: 1
-  m_fontAsset: {fileID: 11400000, guid: 05415b8c7b570bf488beeeac8ab9349c, type: 2}
-  m_sharedMaterial: {fileID: 4788402711944395287, guid: 05415b8c7b570bf488beeeac8ab9349c, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 99666467bcca3ce45bf2726a5df01ce9, type: 2}
+  m_sharedMaterial: {fileID: 8035171570467133358, guid: 99666467bcca3ce45bf2726a5df01ce9, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278190080
-  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
+    rgba: 4280295203
+  m_fontColor: {r: 0.13725491, g: 0.12156863, b: 0.1254902, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -92,8 +92,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
-  m_fontSizeBase: 36
+  m_fontSize: 40
+  m_fontSizeBase: 40
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18

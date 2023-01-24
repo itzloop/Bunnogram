@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 704afb14717a3634b93811b724cf3980, type: 3}
   m_Name: Level_010
   m_EditorClassIdentifier: 
-  sprite: {fileID: 21300000, guid: 63cc7af62bb1b9642bf631481224bd05, type: 3}
+  sprite: {fileID: 21300000, guid: 7948bb3c01862754b909ee47fc768566, type: 3}
   bounds: {x: 5, y: 5}
   backgroundPixels:
   - {x: 3, y: 4}
