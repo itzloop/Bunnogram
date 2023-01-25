@@ -12,19 +12,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 704afb14717a3634b93811b724cf3980, type: 3}
   m_Name: Level_008
   m_EditorClassIdentifier: 
-  sprite: {fileID: 21300000, guid: ed42044040106d448a0e9ebaa532fe54, type: 3}
+  sprite: {fileID: 21300000, guid: c7ce102ac014c7841acbfa68f2b5acb1, type: 3}
   bounds: {x: 5, y: 5}
   backgroundPixels:
   - {x: 4, y: 4}
   - {x: 3, y: 4}
   - {x: 2, y: 4}
   - {x: 0, y: 4}
+  - {x: 4, y: 3}
   - {x: 3, y: 3}
+  - {x: 2, y: 3}
   - {x: 1, y: 3}
-  - {x: 0, y: 3}
-  - {x: 4, y: 2}
   - {x: 1, y: 2}
-  - {x: 4, y: 1}
-  - {x: 3, y: 0}
+  - {x: 3, y: 1}
+  - {x: 0, y: 1}
+  - {x: 1, y: 0}
   - {x: 0, y: 0}
-  levelName: Baby carriage
+  levelName: Bomb

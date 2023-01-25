@@ -12,19 +12,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 704afb14717a3634b93811b724cf3980, type: 3}
   m_Name: Level_005
   m_EditorClassIdentifier: 
-  sprite: {fileID: 21300000, guid: 28d31a4ff0f93064ba7d50f0c7f1a31d, type: 3}
+  sprite: {fileID: 21300000, guid: 5fc91f4a223384b4a92984c37cdf27e9, type: 3}
   bounds: {x: 5, y: 5}
   backgroundPixels:
   - {x: 4, y: 4}
   - {x: 3, y: 4}
   - {x: 2, y: 4}
-  - {x: 4, y: 2}
-  - {x: 3, y: 2}
-  - {x: 1, y: 2}
+  - {x: 0, y: 4}
+  - {x: 4, y: 3}
+  - {x: 3, y: 3}
+  - {x: 1, y: 3}
+  - {x: 0, y: 3}
   - {x: 0, y: 2}
-  - {x: 1, y: 1}
-  - {x: 0, y: 1}
-  - {x: 4, y: 0}
-  - {x: 3, y: 0}
+  - {x: 4, y: 1}
+  - {x: 3, y: 1}
   - {x: 0, y: 0}
-  levelName: Dog
+  levelName: Camel

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Bunnogram;
+using RTLTMPro;
 using ScriptableObjects;
 using UniRx;
 using UnityEditor;
@@ -76,15 +77,18 @@ namespace DefaultNamespace
             var columns = 0;
             for (int i = 1; i < lines.Length; i++)
             {
-                if (i > 10)
+                if (i > 200)
                 {
                     break;
                 }
 
-                // 0-id,1-link,2-name,3-size,4-row,5-col
+                // 0-id,1-idx, 2-link,3-name,4-size,5-row,6-col
                 var data = lines[i].Split(',');
-
-                var level = new Level(i - 1, int.Parse(data[0]), int.Parse(data[5]), int.Parse(data[4]), data[2], false);
+                var level = new Level(i - 1, 
+                    int.Parse(data[1]), 
+                    int.Parse(data[6]), 
+                    int.Parse(data[5]),
+                    data[3], false);
 
                 listOfLevels.Add(level); // add this list into a big list
 
@@ -92,15 +96,16 @@ namespace DefaultNamespace
                 Button buttonPrefab = Instantiate(levelPrefab);
 
                 buttonPrefab.name = "Level " + level.levelNumber;
-                (buttonPrefab.transform.Find("LevelNumber").GetComponent<Text>()).text =
-                    (level.levelNumber).ToString();
+                (buttonPrefab.transform.Find("LevelNumber").GetComponent<RTLTextMeshPro>()).text =
+                    String.Format("مرحله {0}", (level.levelNumber).ToString());
 
                 
                 Sprite previewSprite = Resources.Load<Sprite>("bw-preview/" + level.filename);
 
-                //Sprite nono = Resources.Load<Sprite>("bw/" + String.Format("{0} {1}", level.index, level.name));
+                //Sprite nono = Resources.Load<Sprite>("bw/" + String.Format("{0} {1}", level.id, level.name));
+                //Debug.Log(nono);
                 //CreatePixelatedImage(previewSprite, nono, level.levelNumber, level.name);
-
+        
                 if (!level.isPlayed)
                 {
                     buttonPrefab.GetComponent<Button>().onClick.AddListener(() =>
@@ -112,8 +117,8 @@ namespace DefaultNamespace
                     });
                     Transform notPlayedTransform = buttonPrefab.transform.Find("NotPlayed");
 
-                    (notPlayedTransform.Find("NonogramSize").GetComponent<Text>()).text =
-                        String.Format("{0} x {1}", level.rowsCount, level.columnsCount);
+                    (notPlayedTransform.Find("NonogramSize").GetComponent<RTLTextMeshPro>()).text =
+                        String.Format("{0} در {1}", level.rowsCount, level.columnsCount);
                     notPlayedTransform.gameObject.SetActive(true);
                 }
                 else
