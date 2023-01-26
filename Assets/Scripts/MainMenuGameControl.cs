@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Bunnogram;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -13,12 +14,14 @@ public class MainMenuGameControl : MonoBehaviour
     [SerializeField] Button settingsButton;
     
     [SerializeField] GameObject exitPanel;
-    [SerializeField] GameObject settingsPanel;
 
-    [SerializeField] private Toggle musicToggle;
-    [SerializeField] private Toggle soundsToggle;
 
     private AudioSource audioSource;
+    
+    void Start()
+    {
+        audioSource = GameState.Instance.Get<AudioSource>(Constants.BgMusicKey);
+    }
     
     public void OnPlayButtonClick()
     {
@@ -48,45 +51,5 @@ public class MainMenuGameControl : MonoBehaviour
     {
         // redirect to about us scene
     }
-
-    public void onSettingsButtonClick()
-    {
-        // open settings modal
-        settingsPanel.SetActive(true);
-    }
-
-    public void onSettingsPanelSaveButtonClick()
-    {
-        // save change
-
-        if (musicToggle.isOn && audioSource.mute)
-        {
-            audioSource.mute = false;
-        }
-        else if (!musicToggle.isOn && !audioSource.mute)
-        {
-            audioSource.mute = true;
-        }
-        // hide modal
-        settingsPanel.SetActive(false);
-    }
-
-    public void onSettingsPanelCancelButtonClick()
-    {
-        // TODO return changes
-        
-        // hide modal
-        settingsPanel.SetActive(false);
-    }
-
-    void Start()
-    {
-        audioSource = transform.GetComponent<AudioSource>();
-        DontDestroyOnLoad(audioSource);
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-    }
+    
 }

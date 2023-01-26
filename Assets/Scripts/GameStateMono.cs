@@ -15,6 +15,7 @@ public class GameStateMono : MonoBehaviour
     [SerializeField] private InGameDialog dialog;
     [SerializeField] private GameObject loseDialog;
     [SerializeField] private GameObject winDialog;
+    [SerializeField] private AudioSource bgMusic;
     private void Awake()
     {
         _state = GameState.Instance;
@@ -32,6 +33,12 @@ public class GameStateMono : MonoBehaviour
         var allSquares = pixelatedImage.bounds.x * pixelatedImage.bounds.y;
         var backgroundSquares = pixelatedImage.backgroundPixels.Count;
         var currentSquareCount = new ReactiveProperty<int>(allSquares - backgroundSquares); // TODO replace with hardcoded value
+        
+        // settings
+        var backgroundMusicOn = new ReactiveProperty<bool>(true);
+        var SoundFXOn = new ReactiveProperty<bool>(true);
+
+        var bgMusic = this.bgMusic;
        
         // Store observables
         try
@@ -43,7 +50,11 @@ public class GameStateMono : MonoBehaviour
             GameState.Instance.Store(level, Constants.LevelKey);
             GameState.Instance.Store(pixelatedImage, Constants.PixelatedImageKey);
             GameState.Instance.Store(currentSquareCount, Constants.CurrentSquareKey);
-           // GameState.Instance.Store(new ReactiveProperty<bool>(false), Constants.RestartKey);
+
+            GameState.Instance.Store(backgroundMusicOn, Constants.BgMusicOnKey);
+            GameState.Instance.Store(SoundFXOn, Constants.SoundFXOnKey);
+            GameState.Instance.Store(bgMusic, Constants.BgMusicKey);
+
             
             // Win condition
             currentSquareCount.Where(x => x == 0).Subscribe(x =>
@@ -59,6 +70,9 @@ public class GameStateMono : MonoBehaviour
                 dialog.SetGameObject(loseDialog.GetComponent<CanvasGroup>());
                 dialog.Show();
             });
+            
+            // settings
+            
         }
         catch (Exception e)
         {
