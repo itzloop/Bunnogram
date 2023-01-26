@@ -30,17 +30,25 @@ public class HeathManager : MonoBehaviour
             im.sprite = fullHeart;
             im.rectTransform.sizeDelta = new Vector2(150, 150);
             _images.Add(Instantiate(im, gameObject.transform));
-        } 
-        
+        }
+
+        var maxHp = hp.Value;
         hp.AsObservable().Subscribe(x =>
         {
-            if (x == 3) return;
+            if (x == maxHp)
+            {
+                foreach (var image in _images)
+                {
+                    image.color = Color.white;
+                    image.sprite = fullHeart;
+                }
+                return;
+            }
             
             _images[x].DOFade(.1f, .3f)
                 .OnComplete(() => _images[x].DOFade(1, .1f)
                     .OnStart(() => _images[x].sprite = emptyHeart));
         });
-        
     }
 
 }

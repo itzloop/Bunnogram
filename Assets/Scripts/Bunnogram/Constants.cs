@@ -9,7 +9,9 @@
         public static string LevelKey = "level";
         public static string CurrentSquareKey = "current_square";
         public static string PixelatedImageKey = "pixelated_image";
+        public static string PixelatedImagesKey = "pixelated_images";
         public static string RestartKey = "restart";
+        public static string ListLevelsKey = "list_levels";
 
         public static int MaxHint = 3;
         public static int MaxHealth = 3;

@@ -12,9 +12,6 @@ public class GameStateMono : MonoBehaviour
 
     private GameState _state;
 
-    [SerializeField] private InGameDialog dialog;
-    [SerializeField] private GameObject loseDialog;
-    [SerializeField] private GameObject winDialog;
     private void Awake()
     {
         _state = GameState.Instance;
@@ -45,20 +42,6 @@ public class GameStateMono : MonoBehaviour
             GameState.Instance.Store(currentSquareCount, Constants.CurrentSquareKey);
            // GameState.Instance.Store(new ReactiveProperty<bool>(false), Constants.RestartKey);
             
-            // Win condition
-            currentSquareCount.Where(x => x == 0).Subscribe(x =>
-            {
-                var go = dialog.SetGameObject(winDialog.GetComponent<CanvasGroup>());
-                go.GetComponent<WinDialog>().SetLevelName(pixelatedImage.levelName, pixelatedImage.sprite);
-                dialog.Show();
-            });
-
-            // Lose condition
-            healthOb.Where(x => x == 0).Subscribe(x =>
-            {
-                dialog.SetGameObject(loseDialog.GetComponent<CanvasGroup>());
-                dialog.Show();
-            });
         }
         catch (Exception e)
         {

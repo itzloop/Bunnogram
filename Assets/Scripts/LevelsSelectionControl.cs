@@ -44,6 +44,8 @@ namespace DefaultNamespace
         public GameObject levelsGrid;
         public Button levelPrefab;
 
+        private List<Level> _levels;
+
         private void CreatePixelatedImage(Sprite previewSprite, Sprite originalSprite, int levelNumber, string name)
         {
             PixelatedImage img = ScriptableObject.CreateInstance<PixelatedImage>();
@@ -70,11 +72,34 @@ namespace DefaultNamespace
 
         private void Start()
         {
+            try
+            {
+                _levels = GameState.Instance.Get<List<Level>>(Constants.ListLevelsKey);
+            }
+            catch (Exception _)
+            {
+                Debug.Log($"levels has not been loaded. loading levels...");
+                _levels = null;
+            }
+            if (_levels != null && _levels.Count > 0)
+            {
+                Debug.Log("levels had been cached. don't load them");
+                LoadLevels(_levels);
+                return;
+            }
+            
+            _levels = CreateLevels();
+            GameState.Instance.Store(_levels, Constants.ListLevelsKey);
+            LoadLevels(_levels);
+        }
+
+        private List<Level> CreateLevels()
+        {
             var dataset = Resources.Load<TextAsset>(ds_filename);
             var lines = dataset.text.Split('\n');
-
-            var listOfLevels = new List<Level>();
             var columns = 0;
+            var levels = new List<Level>();
+            
             for (int i = 1; i < lines.Length; i++)
             {
                 if (i > 200)
@@ -90,52 +115,104 @@ namespace DefaultNamespace
                     int.Parse(data[5]),
                     data[3], false);
 
-                listOfLevels.Add(level); // add this list into a big list
+                levels.Add(level); // add this list into a big list
 
 
-                Button buttonPrefab = Instantiate(levelPrefab);
-
+                // create the level button
+                var buttonPrefab = Instantiate(levelPrefab);
+                
                 buttonPrefab.name = "Level " + level.levelNumber;
                 (buttonPrefab.transform.Find("LevelNumber").GetComponent<RTLTextMeshPro>()).text =
                     String.Format("مرحله {0}", (level.levelNumber).ToString());
-
                 
                 Sprite previewSprite = Resources.Load<Sprite>("bw-preview/" + level.filename);
 
-                //Sprite nono = Resources.Load<Sprite>("bw/" + String.Format("{0} {1}", level.id, level.name));
-                //Debug.Log(nono);
-                //CreatePixelatedImage(previewSprite, nono, level.levelNumber, level.name);
+                // Sprite nono = Resources.Load<Sprite>("bw/" + String.Format("{0} {1}", level.id, level.name));
+                // Debug.Log(nono);
+                // CreatePixelatedImage(previewSprite, nono, level.levelNumber, level.name);
         
                 if (!level.isPlayed)
                 {
                     buttonPrefab.GetComponent<Button>().onClick.AddListener(() =>
                     {
                         // open scene to level i
-
-                        GameState.Instance.Update(level.levelNumber, Constants.LevelKey);
+                        GameState.Instance.Get<ReactiveProperty<int>>(Constants.LevelKey).Value = level.levelNumber;
                         SceneManager.LoadScene("InGameScene");
                     });
-                    Transform notPlayedTransform = buttonPrefab.transform.Find("NotPlayed");
-
+                    
+                    var notPlayedTransform = buttonPrefab.transform.Find("NotPlayed");
                     (notPlayedTransform.Find("NonogramSize").GetComponent<RTLTextMeshPro>()).text =
-                        String.Format("{0} در {1}", level.rowsCount, level.columnsCount);
+                        $"{level.rowsCount} در {level.columnsCount}";
                     notPlayedTransform.gameObject.SetActive(true);
                 }
                 else
                 {
-                    Transform playedTransform = buttonPrefab.transform.Find("Played");
+                    var playedTransform = buttonPrefab.transform.Find("Played");
                     playedTransform.gameObject.SetActive(true);
-                    Image img = (playedTransform.Find("Nonogram").GetComponent<Image>());
+                    var img = (playedTransform.Find("Nonogram").GetComponent<Image>());
                     img.sprite = previewSprite;
                     img.preserveAspect = true;
                     playedTransform.Find("Name").GetComponent<Text>().text = level.name;
                 }
 
-
                 buttonPrefab.transform.parent = levelsGrid.transform;
                 buttonPrefab.transform.localPosition = new Vector3(0, 0, 0);
                 buttonPrefab.gameObject.SetActive(true);
                 LayoutRebuilder.ForceRebuildLayoutImmediate(levelsGrid.GetComponent<RectTransform>());
+            }
+
+
+            return levels;
+        }
+
+        private void LoadLevels(List<Level> levels)
+        {
+            for (var i = 0; i < levels.Count; i++)
+            {
+                // Don't load all levels
+                if (i > 200) break;
+                var level = levels[i];
+                var buttonPrefab = Instantiate(levelPrefab);
+                 
+                buttonPrefab.name = "Level " + level.levelNumber;
+                (buttonPrefab.transform.Find("LevelNumber").GetComponent<RTLTextMeshPro>()).text =
+                    String.Format("مرحله {0}", (level.levelNumber).ToString());
+                 
+                Sprite previewSprite = Resources.Load<Sprite>("bw-preview/" + level.filename);
+ 
+                // Sprite nono = Resources.Load<Sprite>("bw/" + String.Format("{0} {1}", level.id, level.name));
+                // Debug.Log(nono);
+                // CreatePixelatedImage(previewSprite, nono, level.levelNumber, level.name);
+         
+                if (!level.isPlayed)
+                {
+                    buttonPrefab.GetComponent<Button>().onClick.AddListener(() =>
+                    {
+                        // open scene to level i
+                        GameState.Instance.Get<ReactiveProperty<int>>(Constants.LevelKey).Value = level.levelNumber;
+                        SceneManager.LoadScene("InGameScene");
+                    });
+                     
+                    var notPlayedTransform = buttonPrefab.transform.Find("NotPlayed");
+                    (notPlayedTransform.Find("NonogramSize").GetComponent<RTLTextMeshPro>()).text =
+                        $"{level.rowsCount} در {level.columnsCount}";
+                    notPlayedTransform.gameObject.SetActive(true);
+                }
+                else
+                {
+                    var playedTransform = buttonPrefab.transform.Find("Played");
+                    playedTransform.gameObject.SetActive(true);
+                    var img = (playedTransform.Find("Nonogram").GetComponent<Image>());
+                    img.sprite = previewSprite;
+                    img.preserveAspect = true;
+                    playedTransform.Find("Name").GetComponent<Text>().text = level.name;
+                }
+ 
+                buttonPrefab.transform.parent = levelsGrid.transform;
+                buttonPrefab.transform.localPosition = new Vector3(0, 0, 0);
+                buttonPrefab.gameObject.SetActive(true);
+                LayoutRebuilder.ForceRebuildLayoutImmediate(levelsGrid.GetComponent<RectTransform>());
+                
             }
         }
     }
