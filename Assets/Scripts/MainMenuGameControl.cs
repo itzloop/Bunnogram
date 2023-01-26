@@ -1,25 +1,32 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Bunnogram;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class MainMenuGameControl : MonoBehaviour
 {
-    public Button playButton;
+    [SerializeField] Button playButton;
+    [SerializeField] Button exitButton;
+    [SerializeField] Button aboutButton;
+    [SerializeField] Button settingsButton;
+    
+    [SerializeField] GameObject exitPanel;
 
-    public Button exitButton;
 
-    public Button aboutButton;
-
-    public Button settingsButton;
-
-    public GameObject exitPanel;
-    public GameObject settingsPanel;
+    private AudioSource audioSource;
+    
+    void Start()
+    {
+        audioSource = GameState.Instance.Get<AudioSource>(Constants.BgMusicKey);
+    }
+    
     public void OnPlayButtonClick()
     {
         // redirect to levels scene
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene("LevelsScene");
     }
 
     public void OnExitButtonClick()
@@ -31,6 +38,7 @@ public class MainMenuGameControl : MonoBehaviour
     public void onExitPanelYesButtonClick()
     {
         // exit game
+        Application.Quit();
     }
 
     public void onExitPanelNoButtonClick()
@@ -43,34 +51,5 @@ public class MainMenuGameControl : MonoBehaviour
     {
         // redirect to about us scene
     }
-
-    public void onSettingsButtonClick()
-    {
-        // open settings modal
-        settingsPanel.SetActive(true);
-    }
     
-    public void onSettingsPanelSaveButtonClick()
-    {
-        // save change
-        // hide modal
-        settingsPanel.SetActive(false);
-    }
-
-    public void onSettingsPanelCancelButtonClick()
-    {
-        // hide modal
-        settingsPanel.SetActive(false);
-    }
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

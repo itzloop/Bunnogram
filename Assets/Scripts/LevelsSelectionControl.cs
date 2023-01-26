@@ -41,11 +41,15 @@ namespace DefaultNamespace
 
         private string ds_filename = "bw";
 
-        public GameObject levelsGrid;
-        public Button levelPrefab;
+        [SerializeField] GameObject levelsGrid;
+        [SerializeField] Button levelPrefab;
 
         private List<Level> _levels;
 
+        public void handleBackButton()
+        {
+            SceneManager.LoadScene("MainMenuScene");
+        }
         private void CreatePixelatedImage(Sprite previewSprite, Sprite originalSprite, int levelNumber, string name)
         {
             PixelatedImage img = ScriptableObject.CreateInstance<PixelatedImage>();
