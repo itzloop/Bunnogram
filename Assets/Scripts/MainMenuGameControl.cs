@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,20 +7,23 @@ using UnityEngine.UI;
 
 public class MainMenuGameControl : MonoBehaviour
 {
-    public Button playButton;
+    [SerializeField] Button playButton;
+    [SerializeField] Button exitButton;
+    [SerializeField] Button aboutButton;
+    [SerializeField] Button settingsButton;
+    
+    [SerializeField] GameObject exitPanel;
+    [SerializeField] GameObject settingsPanel;
 
-    public Button exitButton;
+    [SerializeField] private Toggle musicToggle;
+    [SerializeField] private Toggle soundsToggle;
 
-    public Button aboutButton;
-
-    public Button settingsButton;
-
-    public GameObject exitPanel;
-    public GameObject settingsPanel;
+    private AudioSource audioSource;
+    
     public void OnPlayButtonClick()
     {
         // redirect to levels scene
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene("LevelsScene");
     }
 
     public void OnExitButtonClick()
@@ -31,6 +35,7 @@ public class MainMenuGameControl : MonoBehaviour
     public void onExitPanelYesButtonClick()
     {
         // exit game
+        Application.Quit();
     }
 
     public void onExitPanelNoButtonClick()
@@ -49,28 +54,39 @@ public class MainMenuGameControl : MonoBehaviour
         // open settings modal
         settingsPanel.SetActive(true);
     }
-    
+
     public void onSettingsPanelSaveButtonClick()
     {
         // save change
+
+        if (musicToggle.isOn && audioSource.mute)
+        {
+            audioSource.mute = false;
+        }
+        else if (!musicToggle.isOn && !audioSource.mute)
+        {
+            audioSource.mute = true;
+        }
         // hide modal
         settingsPanel.SetActive(false);
     }
 
     public void onSettingsPanelCancelButtonClick()
     {
+        // TODO return changes
+        
         // hide modal
         settingsPanel.SetActive(false);
     }
-    // Start is called before the first frame update
+
     void Start()
     {
-        
+        audioSource = transform.GetComponent<AudioSource>();
+        DontDestroyOnLoad(audioSource);
     }
 
     // Update is called once per frame
     void Update()
     {
-        
     }
 }
