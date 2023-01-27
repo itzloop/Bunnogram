@@ -17,7 +17,7 @@ namespace DefaultNamespace
     {
         private class Level
         {
-            public  int id { get; set; }
+            public int id { get; set; }
             public int index { get; set; }
             public int columnsCount { get; set; }
             public int rowsCount { get; set; }
@@ -26,7 +26,8 @@ namespace DefaultNamespace
             public bool isPlayed { get; set; }
             public int levelNumber { get; set; }
 
-            public Level(int index, int id, int columnsCount, int rowsCount, string name, string englishName, bool isPlayed)
+            public Level(int index, int id, int columnsCount, int rowsCount, string name, string englishName,
+                bool isPlayed)
             {
                 this.id = id;
                 this.index = index;
@@ -44,6 +45,8 @@ namespace DefaultNamespace
         [SerializeField] GameObject levelsGrid;
         [SerializeField] Button levelPrefab;
         [SerializeField] private GameObject playedLevelPanel;
+        [SerializeField] private Button NextPageButton;
+        [SerializeField] private Button PrevPageButton;
 
         private List<Level[]> _levels;
         private bool[] _playedLevels;
@@ -62,6 +65,7 @@ namespace DefaultNamespace
         {
             playedLevelPanel.SetActive(false);
         }
+
         private void CreatePixelatedImage(Sprite previewSprite, Sprite originalSprite, int levelNumber, string name)
         {
             PixelatedImage img = ScriptableObject.CreateInstance<PixelatedImage>();
@@ -86,25 +90,8 @@ namespace DefaultNamespace
             AssetDatabase.CreateAsset(img, $"Assets/Resources/Levels/Level_{levelNumber:000}.asset");
         }
 
-        
-
-        private void Start()
+        private void HandlePage(int page)
         {
-            _playedLevels = GameObject.Find("PlayerDataControl").GetComponent<PlayerDataControl>().PlayerData.playedLevels;
-            page =  GameState.Instance.Get<int>(Constants.LevelPageKey);
-            
-            try
-            {
-                allPages = GameState.Instance.Get<Dictionary<int, Level[]>>(Constants.ListLevelsKey);
-                
-            }
-            catch (Exception _)
-            {
-                allPages = new Dictionary<int, Level[]>();
-                GameState.Instance.Store(allPages, Constants.ListLevelsKey);
-                
-            }
-
             if (allPages.ContainsKey(page))
             {
                 // levels are loaded before
@@ -113,7 +100,6 @@ namespace DefaultNamespace
                 {
                     LoadLevel(currPageLevels[i]);
                 }
-                
             }
             else
             {
@@ -123,23 +109,79 @@ namespace DefaultNamespace
                 allPages.Add(page, currPageLevels);
                 GameState.Instance.Update(allPages, Constants.ListLevelsKey);
             }
-            
-            
-            
+
+
+            if (page == 1)
+            {
+                PrevPageButton.gameObject.SetActive(false);
+            }
+            else
+            {
+                PrevPageButton.gameObject.SetActive(true);
+            }
+
+            if (page > 250)
+            {
+                NextPageButton.gameObject.SetActive(false);
+            }
         }
-        
+
+        public void NextPage()
+        {
+            page += 1;
+            foreach (Transform child in levelsGrid.transform)
+            {
+                Destroy(child.gameObject);
+            }
+
+            HandlePage(page);
+        }
+
+        public void PrevPage()
+        {
+            page -= 1;
+            foreach (Transform child in levelsGrid.transform)
+            {
+                Destroy(child.gameObject);
+            }
+
+            HandlePage(page);
+        }
+
+
+        private void Start()
+        {
+            _playedLevels = GameObject.Find("PlayerDataControl").GetComponent<PlayerDataControl>().PlayerData
+                .playedLevels;
+            page = GameState.Instance.Get<int>(Constants.LevelPageKey);
+
+            NextPageButton.onClick.AddListener(NextPage);
+            PrevPageButton.onClick.AddListener(PrevPage);
+            try
+            {
+                allPages = GameState.Instance.Get<Dictionary<int, Level[]>>(Constants.ListLevelsKey);
+            }
+            catch (Exception _)
+            {
+                allPages = new Dictionary<int, Level[]>();
+                GameState.Instance.Store(allPages, Constants.ListLevelsKey);
+            }
+
+            HandlePage(page);
+        }
+
         private Level[] GetLevelsOfPage(int page)
         {
-            int start = page * levelsPerPage;
+            int start = (page - 1) * levelsPerPage + 1;
             int end = start + levelsPerPage;
             List<Level> currLevels = new List<Level>();
-            
+
             var lines = dataset.text.Split('\n');
             for (int i = start; i < end; i++)
             {
-                var data = lines[i + 1].Split(',');
+                var data = lines[i].Split(',');
                 bool isPlayed = false;
-                Level lvl = DataToLevel(data, i);
+                Level lvl = DataToLevel(data, i - 1);
                 currLevels.Add(lvl);
                 LoadLevel(lvl);
             }
@@ -158,23 +200,23 @@ namespace DefaultNamespace
             {
                 Debug.Log("Could not find level in player data");
             }
-                    
-            return new Level(index, 
-                int.Parse(data[1]), 
-                int.Parse(data[6]), 
+
+            return new Level(index,
+                int.Parse(data[1]),
+                int.Parse(data[6]),
                 int.Parse(data[5]),
-                data[7],data[3],
+                data[7], data[3],
                 isPlayed);
         }
 
         private void LoadLevel(Level level)
         {
             var buttonPrefab = Instantiate(levelPrefab);
-                
+
             buttonPrefab.name = "Level " + level.levelNumber;
             (buttonPrefab.transform.Find("LevelNumber").GetComponent<RTLTextMeshPro>()).text =
                 String.Format("مرحله {0}", (level.levelNumber).ToString());
-                
+
             Sprite previewSprite = Resources.Load<Sprite>("bw-preview/" + level.filename);
 
             if (!level.isPlayed)
@@ -185,7 +227,7 @@ namespace DefaultNamespace
                     GameState.Instance.Get<ReactiveProperty<int>>(Constants.LevelKey).Value = level.levelNumber;
                     SceneManager.LoadScene("InGameScene");
                 });
-                    
+
                 var notPlayedTransform = buttonPrefab.transform.Find("NotPlayed");
                 (notPlayedTransform.Find("NonogramSize").GetComponent<RTLTextMeshPro>()).text =
                     $"{level.rowsCount} در {level.columnsCount}";
@@ -198,9 +240,8 @@ namespace DefaultNamespace
                     var panelImg = playedLevelPanel.transform.Find("Nonogram").GetComponent<Image>();
                     panelImg.sprite = previewSprite;
                     panelImg.preserveAspect = true;
-                    
-                    playedLevelPanel.transform.Find("Name").GetComponent<RTLTextMeshPro>().text = level.name;
 
+                    playedLevelPanel.transform.Find("Name").GetComponent<RTLTextMeshPro>().text = level.name;
                 });
 
                 var playedTransform = buttonPrefab.transform.Find("Played");
@@ -216,7 +257,5 @@ namespace DefaultNamespace
             buttonPrefab.gameObject.SetActive(true);
             LayoutRebuilder.ForceRebuildLayoutImmediate(levelsGrid.GetComponent<RectTransform>());
         }
-
-       
     }
 }
