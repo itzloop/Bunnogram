@@ -14,13 +14,9 @@ public class MainMenuGameControl : MonoBehaviour
     [SerializeField] Button settingsButton;
     
     [SerializeField] GameObject exitPanel;
-
-
-    private AudioSource audioSource;
     
     void Start()
     {
-        audioSource = GameState.Instance.Get<AudioSource>(Constants.BgMusicKey);
     }
     
     public void OnPlayButtonClick()

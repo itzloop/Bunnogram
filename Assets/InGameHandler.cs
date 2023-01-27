@@ -60,6 +60,9 @@ public class InGameHandler : MonoBehaviour
         // Win condition
         _squareCount.Where(count => count == 0).Subscribe(_ =>
         {
+            // save
+            GameObject.Find("PlayerDataControl").GetComponent<PlayerDataControl>().SavePlayedLevel(_level.Value - 1);
+            // show dialog
             var go = dialog.SetGameObject(winDialog.GetComponent<CanvasGroup>());
             go.GetComponent<WinDialog>().SetLevelName(pixelatedImage.levelName, pixelatedImage.sprite);
             dialog.Show();
@@ -133,24 +136,26 @@ public class InGameHandler : MonoBehaviour
     private void SetBottomPanelButtonsColor(ClickMode mode)
     {
         const float duration = .3f;
+        Color onColor = new Color(0.682353f, 0.7333333f, 0.6156863f);
+        Color defColor = new Color(0.9686275f,0.9566621f,0.9347255f);
         switch (mode)
         {
             case ClickMode.BackgroundSelection:
-                this.x.GetComponent<Image>().DOColor(Color.cyan, duration);
-                this.o.GetComponent<Image>().DOColor(Color.white, duration);
-                this.hint.GetComponent<Image>().DOColor(Color.white, duration);
+                this.x.GetComponent<Image>().DOColor(onColor, duration);
+                this.o.GetComponent<Image>().DOColor(defColor, duration);
+                this.hint.GetComponent<Image>().DOColor(defColor, duration);
                 GameStateHelper.GetClickMode().Value = ClickMode.BackgroundSelection;
                 break;
             case ClickMode.ForeGroundSelection:
-                this.x.GetComponent<Image>().DOColor(Color.white, duration);
-                this.o.GetComponent<Image>().DOColor(Color.cyan, duration);
-                this.hint.GetComponent<Image>().DOColor(Color.white, duration);
+                this.x.GetComponent<Image>().DOColor(defColor, duration);
+                this.o.GetComponent<Image>().DOColor(onColor, duration);
+                this.hint.GetComponent<Image>().DOColor(defColor, duration);
                 GameStateHelper.GetClickMode().Value = ClickMode.ForeGroundSelection;
                 break;
             case ClickMode.HintSelection:
-                this.x.GetComponent<Image>().DOColor(Color.white, duration);
-                this.o.GetComponent<Image>().DOColor(Color.white, duration);
-                this.hint.GetComponent<Image>().DOColor(Color.cyan, duration);
+                this.x.GetComponent<Image>().DOColor(defColor, duration);
+                this.o.GetComponent<Image>().DOColor(defColor, duration);
+                this.hint.GetComponent<Image>().DOColor(onColor, duration);
                 GameStateHelper.GetClickMode().Value = ClickMode.HintSelection;
                 break;
             default:

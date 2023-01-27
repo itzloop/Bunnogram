@@ -20,8 +20,6 @@ MonoBehaviour:
   - {x: 1, y: 7}
   - {x: 0, y: 7}
   - {x: 6, y: 6}
-  - {x: 5, y: 6}
-  - {x: 4, y: 6}
   - {x: 3, y: 6}
   - {x: 1, y: 6}
   - {x: 0, y: 6}
@@ -37,8 +35,6 @@ MonoBehaviour:
   - {x: 2, y: 2}
   - {x: 1, y: 2}
   - {x: 6, y: 1}
-  - {x: 5, y: 1}
-  - {x: 4, y: 1}
   - {x: 3, y: 1}
   - {x: 1, y: 1}
   - {x: 0, y: 1}
@@ -46,4 +42,4 @@ MonoBehaviour:
   - {x: 2, y: 0}
   - {x: 1, y: 0}
   - {x: 0, y: 0}
-  levelName: Pumpkin
+  levelName: "\u0643\u062F\u0648 \u062D\u0644\u0648\u0627\u064A\u064A\r"

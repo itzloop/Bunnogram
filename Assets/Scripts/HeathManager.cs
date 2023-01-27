@@ -44,7 +44,7 @@ public class HeathManager : MonoBehaviour
                 }
                 return;
             }
-            
+            Debug.Log(x);
             _images[x].DOFade(.1f, .3f)
                 .OnComplete(() => _images[x].DOFade(1, .1f)
                     .OnStart(() => _images[x].sprite = emptyHeart));

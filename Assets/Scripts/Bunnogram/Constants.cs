@@ -16,9 +16,10 @@
         public static int MaxHint = 3;
         public static int MaxHealth = 3;
         
-        public static string BgMusicOnKey = "bg_music_on";
-        public static string SoundFXOnKey = "sound_fx_on";
+
         public static string BgMusicKey = "bg_music";
+        
+        public static int numberOfLevels = 100;
 
     }
 }

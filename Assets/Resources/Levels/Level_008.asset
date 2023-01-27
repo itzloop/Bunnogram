@@ -28,4 +28,4 @@ MonoBehaviour:
   - {x: 0, y: 1}
   - {x: 1, y: 0}
   - {x: 0, y: 0}
-  levelName: Bomb
+  levelName: "\u0628\u0645\u0628\r"

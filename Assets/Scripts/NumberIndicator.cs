@@ -15,10 +15,13 @@ public class NumberIndicator : MonoBehaviour
         if (row)
         {
             rectTransform.offsetMax = new Vector2(-offset, rectTransform.offsetMax.y);
-            rectTransform.offsetMin = new Vector2(offset, rectTransform.offsetMin.x);
+            rectTransform.offsetMin = new Vector2(offset, rectTransform.offsetMin.y);
             var verticalLayoutGroup = rectTransform.gameObject.AddComponent<VerticalLayoutGroup>();
             verticalLayoutGroup.childAlignment = TextAnchor.LowerCenter;
             verticalLayoutGroup.childForceExpandHeight = false;
+            verticalLayoutGroup.childControlHeight = false;
+            verticalLayoutGroup.padding.top = 15;
+            verticalLayoutGroup.padding.bottom = 15;
             return;
         }
         
@@ -27,8 +30,10 @@ public class NumberIndicator : MonoBehaviour
         rectTransform.offsetMin = new Vector2(rectTransform.offsetMin.x, offset);
         var horizontalLayoutGroup = rectTransform.gameObject.AddComponent<HorizontalLayoutGroup>();
         horizontalLayoutGroup.childAlignment = TextAnchor.MiddleRight;
-        horizontalLayoutGroup.padding.right = 20;
+        horizontalLayoutGroup.padding.right = 15;
+        horizontalLayoutGroup.padding.left = 15;
         horizontalLayoutGroup.childForceExpandWidth = false;
+        horizontalLayoutGroup.childControlWidth = false;
     }
 
     public void AddIndicators(List<int> counts)

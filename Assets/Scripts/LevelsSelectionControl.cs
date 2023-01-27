@@ -26,14 +26,14 @@ namespace DefaultNamespace
             public bool isPlayed { get; set; }
             public int levelNumber { get; set; }
 
-            public Level(int index, int id, int columnsCount, int rowsCount, string name, bool isPlayed)
+            public Level(int index, int id, int columnsCount, int rowsCount, string name, string englishName, bool isPlayed)
             {
                 this.id = id;
                 this.index = index;
                 this.columnsCount = columnsCount;
                 this.rowsCount = rowsCount;
                 this.name = name;
-                this.filename = String.Format("{0}-{1}", id, name);
+                this.filename = String.Format("{0}-{1}", id, englishName);
                 this.isPlayed = isPlayed;
                 this.levelNumber = index + 1;
             }
@@ -45,6 +45,7 @@ namespace DefaultNamespace
         [SerializeField] Button levelPrefab;
 
         private List<Level> _levels;
+        private bool[] _playedLevels;
 
         public void handleBackButton()
         {
@@ -76,6 +77,7 @@ namespace DefaultNamespace
 
         private void Start()
         {
+            _playedLevels = GameObject.Find("PlayerDataControl").GetComponent<PlayerDataControl>().PlayerData.playedLevels;
             try
             {
                 _levels = GameState.Instance.Get<List<Level>>(Constants.ListLevelsKey);
@@ -96,6 +98,7 @@ namespace DefaultNamespace
             GameState.Instance.Store(_levels, Constants.ListLevelsKey);
             LoadLevels(_levels);
         }
+        
 
         private List<Level> CreateLevels()
         {
@@ -106,18 +109,30 @@ namespace DefaultNamespace
             
             for (int i = 1; i < lines.Length; i++)
             {
-                if (i > 200)
+                if (i > Constants.numberOfLevels)
                 {
                     break;
                 }
 
-                // 0-id,1-idx, 2-link,3-name,4-size,5-row,6-col
+                // 0-id,1-idx, 2-link,3-name,4-size,5-row,6-col,7-persian
                 var data = lines[i].Split(',');
-                var level = new Level(i - 1, 
+                bool isPlayed = false;
+                int index = i - 1;
+                if (_playedLevels != null && _playedLevels.Length > index)
+                {
+                    isPlayed = _playedLevels[index];
+                }
+                else
+                {
+                    Debug.Log("Could not find level in player data");
+                }
+                    
+                var level = new Level(index, 
                     int.Parse(data[1]), 
                     int.Parse(data[6]), 
                     int.Parse(data[5]),
-                    data[3], false);
+                    data[7],data[3],
+                    isPlayed);
 
                 levels.Add(level); // add this list into a big list
 
@@ -131,9 +146,8 @@ namespace DefaultNamespace
                 
                 Sprite previewSprite = Resources.Load<Sprite>("bw-preview/" + level.filename);
 
-                // Sprite nono = Resources.Load<Sprite>("bw/" + String.Format("{0} {1}", level.id, level.name));
-                // Debug.Log(nono);
-                // CreatePixelatedImage(previewSprite, nono, level.levelNumber, level.name);
+                //Sprite nono = Resources.Load<Sprite>("bw/" + String.Format("{0} {1}", level.id, data[3]));
+                //CreatePixelatedImage(previewSprite, nono, level.levelNumber, level.name);
         
                 if (!level.isPlayed)
                 {
@@ -156,7 +170,7 @@ namespace DefaultNamespace
                     var img = (playedTransform.Find("Nonogram").GetComponent<Image>());
                     img.sprite = previewSprite;
                     img.preserveAspect = true;
-                    playedTransform.Find("Name").GetComponent<Text>().text = level.name;
+                    playedTransform.Find("Name").GetComponent<RTLTextMeshPro>().text = level.name;
                 }
 
                 buttonPrefab.transform.parent = levelsGrid.transform;
@@ -174,7 +188,8 @@ namespace DefaultNamespace
             for (var i = 0; i < levels.Count; i++)
             {
                 // Don't load all levels
-                if (i > 200) break;
+                if (i > Constants.numberOfLevels) break;
+                
                 var level = levels[i];
                 var buttonPrefab = Instantiate(levelPrefab);
                  
@@ -183,10 +198,15 @@ namespace DefaultNamespace
                     String.Format("مرحله {0}", (level.levelNumber).ToString());
                  
                 Sprite previewSprite = Resources.Load<Sprite>("bw-preview/" + level.filename);
- 
-                // Sprite nono = Resources.Load<Sprite>("bw/" + String.Format("{0} {1}", level.id, level.name));
-                // Debug.Log(nono);
-                // CreatePixelatedImage(previewSprite, nono, level.levelNumber, level.name);
+
+                
+                bool isPlayed = false;
+                if (_playedLevels != null && _playedLevels.Length > i)
+                {
+                    isPlayed = _playedLevels[i];
+                }
+
+                level.isPlayed = isPlayed;
          
                 if (!level.isPlayed)
                 {
@@ -209,7 +229,7 @@ namespace DefaultNamespace
                     var img = (playedTransform.Find("Nonogram").GetComponent<Image>());
                     img.sprite = previewSprite;
                     img.preserveAspect = true;
-                    playedTransform.Find("Name").GetComponent<Text>().text = level.name;
+                    playedTransform.Find("Name").GetComponent<RTLTextMeshPro>().text = level.name;
                 }
  
                 buttonPrefab.transform.parent = levelsGrid.transform;

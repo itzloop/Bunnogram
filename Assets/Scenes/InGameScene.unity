@@ -298,63 +298,6 @@ CanvasGroup:
   m_Interactable: 0
   m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
---- !u!1001 &140253067
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 1974714390289678484, guid: 5c73185a464973a4bb5b7c05ad30b6a4, type: 3}
-      propertyPath: m_RootOrder
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 1974714390289678484, guid: 5c73185a464973a4bb5b7c05ad30b6a4, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1974714390289678484, guid: 5c73185a464973a4bb5b7c05ad30b6a4, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1974714390289678484, guid: 5c73185a464973a4bb5b7c05ad30b6a4, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1974714390289678484, guid: 5c73185a464973a4bb5b7c05ad30b6a4, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1974714390289678484, guid: 5c73185a464973a4bb5b7c05ad30b6a4, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1974714390289678484, guid: 5c73185a464973a4bb5b7c05ad30b6a4, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1974714390289678484, guid: 5c73185a464973a4bb5b7c05ad30b6a4, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1974714390289678484, guid: 5c73185a464973a4bb5b7c05ad30b6a4, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1974714390289678484, guid: 5c73185a464973a4bb5b7c05ad30b6a4, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1974714390289678484, guid: 5c73185a464973a4bb5b7c05ad30b6a4, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8565500589808284388, guid: 5c73185a464973a4bb5b7c05ad30b6a4, type: 3}
-      propertyPath: m_Name
-      value: GameState
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 5c73185a464973a4bb5b7c05ad30b6a4, type: 3}
 --- !u!1 &181185565
 GameObject:
   m_ObjectHideFlags: 0
@@ -1426,7 +1369,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.96900004, g: 0.94606704, b: 0.900201, a: 1}
+  m_Color: {r: 0.96862745, g: 0.95666206, b: 0.93472546, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1547,7 +1490,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.96862745, g: 0.95666206, b: 0.93472546, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -2477,8 +2420,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b69ed7da5e8eb16468845f21ccb03e41, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fullHeart: {fileID: 21300000, guid: 1ec7f75a721ce884f97d9ce95d5f46cc, type: 3}
-  emptyHeart: {fileID: 21300000, guid: 7bfb1da1ed65259438f36c98855657f4, type: 3}
+  fullHeart: {fileID: 21300000, guid: 7569afd721358e44db1c8698af0506b4, type: 3}
+  emptyHeart: {fileID: 21300000, guid: a13c7a77d509a0d44948e6671fd4f30a, type: 3}
 --- !u!1 &1476354958
 GameObject:
   m_ObjectHideFlags: 0
@@ -3020,7 +2963,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.96862745, g: 0.95666206, b: 0.93472546, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
