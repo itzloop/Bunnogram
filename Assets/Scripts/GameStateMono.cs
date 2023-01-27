@@ -42,6 +42,8 @@ public class GameStateMono : MonoBehaviour
         var currentSquareCount = new ReactiveProperty<int>(allSquares - backgroundSquares); // TODO replace with hardcoded value
         
         var bgMusic = this.bgMusic;
+
+        var levelPage = 1;
        
         // Store observables
         try
@@ -53,6 +55,8 @@ public class GameStateMono : MonoBehaviour
             GameState.Instance.Store(level, Constants.LevelKey);
             GameState.Instance.Store(pixelatedImage, Constants.PixelatedImageKey);
             GameState.Instance.Store(currentSquareCount, Constants.CurrentSquareKey);
+            
+            GameState.Instance.Store(levelPage, Constants.LevelPageKey);
 
             GameState.Instance.Store(bgMusic, Constants.BgMusicKey);
 
