@@ -15,6 +15,16 @@ public class GameStateMono : MonoBehaviour
 
     private void Awake()
     {
+
+        var stateMonos = FindObjectsOfType<GameStateMono>();
+        if (stateMonos.Length > 1)
+        {
+            for (var i = 1; i < stateMonos.Length; i++)
+            {
+                Destroy(stateMonos[i].gameObject);
+            }
+        }
+        
         _state = GameState.Instance;
         DontDestroyOnLoad(this.gameObject);
         

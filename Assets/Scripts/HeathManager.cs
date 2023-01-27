@@ -14,11 +14,7 @@ public class HeathManager : MonoBehaviour
 
     private List<Image> _images;
 
-    private void Awake()
-    {
-        // clear child
-    }
-
+    private IDisposable _disposable;
     void Start()
     {
         _images = new List<Image>();
@@ -33,7 +29,7 @@ public class HeathManager : MonoBehaviour
         }
 
         var maxHp = hp.Value;
-        hp.AsObservable().Subscribe(x =>
+        _disposable = hp.AsObservable().Subscribe(x =>
         {
             if (x == maxHp)
             {
@@ -44,11 +40,17 @@ public class HeathManager : MonoBehaviour
                 }
                 return;
             }
-            Debug.Log(x);
+            
             _images[x].DOFade(.1f, .3f)
                 .OnComplete(() => _images[x].DOFade(1, .1f)
                     .OnStart(() => _images[x].sprite = emptyHeart));
         });
     }
 
+    private void OnDestroy()
+    {
+        if (_disposable == null) return;
+        
+        _disposable.Dispose();
+    }
 }

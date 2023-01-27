@@ -30,12 +30,6 @@ public class ImageGrid : MonoBehaviour
     [SerializeField] private GameObject row;
     [SerializeField] private GameObject col;
     [SerializeField] private NumberIndicator numberIndicator;
-    
-    // Bottom panel's buttons
-    // [SerializeField] private Button x;
-    // [SerializeField] private Button o;
-    // [SerializeField] private Button hint;
-    // [SerializeField] private RTLTextMeshPro hintCount;
 
     private void InitVariables()
     {

@@ -14,6 +14,15 @@ public class PlayerDataControl : MonoBehaviour
 
     void Awake()
     {
+        var objs = FindObjectsOfType<PlayerDataControl>();
+        if (objs.Length > 1)
+        {
+            for (var i = 1; i < objs.Length; i++)
+            {
+                Destroy(objs[i].gameObject);
+            }
+        }
+        
         DontDestroyOnLoad(gameObject);
         playerDataPath = Application.persistentDataPath + "/playerdata.json";
         if (File.Exists(playerDataPath))

@@ -44,6 +44,24 @@ public class InGameDialog : MonoBehaviour
         _gameObject = Instantiate(go, gameObject.transform);
         return _gameObject.gameObject;
     }
+    
+    
+    public GameObject SetGameObject(CanvasGroup go, Action<GameObject> callback)
+    {
+        if (_showed)
+            throw new Exception("can't change _gameObject when showing the dialog.");
+                
+        // Destroy old game object
+        if (_gameObject != null)
+        {
+            Destroy(_gameObject);
+        }
+
+        _gameObject = Instantiate(go, gameObject.transform);
+        var o = _gameObject.gameObject;
+        callback(o);
+        return o;
+    }
 
     public void Show()
     {
@@ -62,6 +80,11 @@ public class InGameDialog : MonoBehaviour
         _showed = false;
         DOTween.Sequence()
             .Join(_image.DOFade(0, _alpha))
-            .Join(_gameObject.DOFade(0, _alpha));
+            .Join(_gameObject.DOFade(0, _alpha))
+            .OnComplete(() =>
+            {
+                Destroy(_gameObject.gameObject);
+                _gameObject = null;
+            });
     }
 }

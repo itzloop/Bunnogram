@@ -30,7 +30,7 @@ public class InGameHandler : MonoBehaviour
     [SerializeField] private RTLTextMeshPro levelTitle;
 
     [SerializeField] private InGameDialog dialog;
-    [SerializeField] private GameObject loseDialog;
+    [SerializeField] private LoseDialog loseDialog;
     [SerializeField] private GameObject winDialog;
     [SerializeField] private ImageGrid imageGrid;
 
@@ -39,16 +39,20 @@ public class InGameHandler : MonoBehaviour
     private ReactiveProperty<int> _squareCount;
     private ReactiveProperty<int> _hints;
     private ReactiveProperty<int> _level;
+
+    private List<IDisposable> _disposables;
     private void Awake()
     {
+        _disposables = new List<IDisposable>();
+        
         this.x.onClick.AddListener(() => SetBottomPanelButtonsColor(ClickMode.BackgroundSelection));
         this.o.onClick.AddListener(() => SetBottomPanelButtonsColor(ClickMode.ForeGroundSelection));
         this.hint.onClick.AddListener(() => SetBottomPanelButtonsColor(ClickMode.HintSelection));
         
-        GameStateHelper.GetHints().AsObservable().Subscribe(n =>
+        _disposables.Add(GameStateHelper.GetHints().AsObservable().Subscribe(n =>
         {
             hintCount.text = n.ToString();
-        });
+        }));
 
         _level = GameState.Instance.Get<ReactiveProperty<int>>(Constants.LevelKey);
         _hints = GameState.Instance.Get<ReactiveProperty<int>>(Constants.HintsCountKey);
@@ -58,27 +62,39 @@ public class InGameHandler : MonoBehaviour
         _maxHP = _hp.Value;
         _maxHints = _hints.Value;
         // Win condition
-        _squareCount.Where(count => count == 0).Subscribe(_ =>
+        _disposables.Add(_squareCount.Where(count => count == 0).Subscribe(_ =>
         {
+            var pixelatedImage = Resources.Load<PixelatedImage>($"Levels/Level_{_level.Value:000}");
+            
             // save
             GameObject.Find("PlayerDataControl").GetComponent<PlayerDataControl>().SavePlayedLevel(_level.Value - 1);
             // show dialog
             var go = dialog.SetGameObject(winDialog.GetComponent<CanvasGroup>());
             go.GetComponent<WinDialog>().SetLevelName(pixelatedImage.levelName, pixelatedImage.sprite);
+            go.GetComponent<WinDialog>().onNextLevelAction += () =>
+            {
+                dialog.Hide();
+            };
             dialog.Show();
-        });
+        }));
 
         // Lose condition
-        _hp.Where(hp => hp == 0).Subscribe(_ =>
+        _disposables.Add(_hp.Where(hp => hp == 0).Subscribe(_ =>
         {
-            dialog.SetGameObject(loseDialog.GetComponent<CanvasGroup>());
+            var go = dialog.SetGameObject(loseDialog.GetComponent<CanvasGroup>());
+            go.GetComponent<LoseDialog>().restartAction += () =>
+            {
+                dialog.Hide();
+            };
+            
             dialog.Show();
-        });
+        }));
 
-        _level.AsObservable().Subscribe(l =>
+        _disposables.Add(_level.AsObservable().Subscribe(l =>
         {
             levelTitle.text = $"مرحله {l}";
-        });
+            SetupLevel(l);
+        }));
         
         // add listener to menu button
         menuButton.onClick.AddListener(ShowMenu);
@@ -86,7 +102,24 @@ public class InGameHandler : MonoBehaviour
         returnToGameButton.onClick.AddListener(HideMenu);
         returnToLevelSelectionSceneButton.onClick.AddListener(ReturnToLevelSelectionScene);
         
-        SetupLevel(_level.Value);
+        // SetupLevel(_level.Value);
+    }
+
+    private void OnDestroy()
+    {
+        foreach (var disposable in _disposables)
+        {
+            disposable.Dispose();
+        }
+
+        // remove all listeners
+        menuButton.onClick.RemoveAllListeners();
+        restartButton.onClick.RemoveAllListeners();
+        returnToGameButton.onClick.RemoveAllListeners();
+        returnToLevelSelectionSceneButton.onClick.RemoveAllListeners();
+        x.onClick.RemoveAllListeners();
+        o.onClick.RemoveAllListeners();
+        hint.onClick.RemoveAllListeners();
     }
 
     private void SetupLevel(int level)
@@ -100,7 +133,7 @@ public class InGameHandler : MonoBehaviour
         var pixelatedImage = Resources.Load<PixelatedImage>($"Levels/Level_{level:000}");
         
         // setup the grid
-        Debug.Log($"current level {_level.Value}");
+        Debug.Log($"current level {_level.Value} {pixelatedImage.levelName} {pixelatedImage.sprite.name}");
         imageGrid.SetupGrid(pixelatedImage);
         
         // Set the default selected button

@@ -17,7 +17,7 @@ public class SettingsControl : MonoBehaviour
     private PlayerData playerData;
     void Start()
     {
-         playerData = GameObject.Find("PlayerDataControl").GetComponent<PlayerDataControl>().PlayerData;
+        playerData = GameObject.Find("PlayerDataControl").GetComponent<PlayerDataControl>().PlayerData;
         audioSource = GameState.Instance.Get<AudioSource>(Constants.BgMusicKey);
         musicToggle.isOn = playerData.bgMusicOn;
         soundsToggle.isOn = playerData.soundFXOn;

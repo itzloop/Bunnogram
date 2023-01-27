@@ -59,6 +59,11 @@ public class Cell : MonoBehaviour
         _button.onClick.AddListener(OnClick);
     }
 
+    private void OnDestroy()
+    {
+        _button.onClick.RemoveAllListeners();
+    }
+
     private void OnClick()
     {
         if(_marked) return;
