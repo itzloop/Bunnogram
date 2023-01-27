@@ -14,7 +14,7 @@ using Random = UnityEngine.Random;
 public class Cell : MonoBehaviour
 {
     
-    private enum CellMarkMode {
+    public enum CellMarkMode {
         CorrectBackground, CorrectForeground, WrongForeground, WrongBackground
     }
     private Button _button;
@@ -26,16 +26,22 @@ public class Cell : MonoBehaviour
     [SerializeField] private Image background;
     [SerializeField] private Image square;
 
+    [SerializeField] private float scaleUpDuration = .15f;
+    [SerializeField] private float scaleDownDuration = .15f;
+    [SerializeField] private Vector2 scaleUpVector = Vector2.one * 1.2f;
+    
     public Vector2Int CellCord { get; private set; }
     public bool IsBackground { get; private set; }
 
-    private bool _marked = false;
+    public bool Marked { get; private set; }
 
-    public void Init(Vector2Int cellCord, List<Vector2Int> backgroundPixelCords)
+    private Action<ClickMode, Cell> _callback;
+
+    public void Init(Vector2Int cellCord, List<Vector2Int> backgroundPixelCords, Action<ClickMode, Cell> callback)
     {
         CellCord = cellCord;
         IsBackground = false;
-        
+        _callback = callback; 
         // Find if this cell is a background cell or not
         foreach (var pixelCord in backgroundPixelCords)
         {
@@ -66,7 +72,7 @@ public class Cell : MonoBehaviour
 
     private void OnClick()
     {
-        if(_marked) return;
+        if(Marked) return;
         var cm = GameStateHelper.GetClickMode().Value;
         switch (cm)
         {
@@ -81,7 +87,9 @@ public class Cell : MonoBehaviour
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
-        } 
+        }
+
+        _callback(cm, this);
     }
 
     private void HandleBackgroundSelectionMode()
@@ -126,10 +134,10 @@ public class Cell : MonoBehaviour
         MarkCell(mode);
     }
 
-    private void MarkCell(CellMarkMode mode)
+    public void MarkCell(CellMarkMode mode)
     {
-        if(_marked) return;
-        _marked = true;
+        if(Marked) return;
+        Marked = true;
 
         if (!IsBackground)
         {
@@ -157,5 +165,22 @@ public class Cell : MonoBehaviour
             default:
                 throw new ArgumentOutOfRangeException(nameof(mode), mode, null);
         }
+    }
+
+    public void AnimateFinished(float startDelay)
+    {
+        
+        var scaleUp = transform
+            .DOScale(new Vector3(scaleUpVector.x, scaleUpVector.y, 1), scaleUpDuration)
+            .SetEase(Ease.InCubic);
+        
+        var  scaleDown = transform
+            .DOScale(new Vector3(1f,1f,0), scaleDownDuration)
+            .SetEase(Ease.OutCubic);
+
+        DOTween.Sequence()
+            .Prepend(scaleUp)
+            .Append(scaleDown)
+            .SetDelay(startDelay);
     }
 }
