@@ -87,6 +87,7 @@ public class InGameHandler : MonoBehaviour
             var go = dialog.SetGameObject(loseDialog.GetComponent<CanvasGroup>());
             go.GetComponent<LoseDialog>().restartAction += () =>
             {
+                Restart();
                 dialog.Hide();
             };
             
