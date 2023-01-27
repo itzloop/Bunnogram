@@ -25,6 +25,7 @@ public class ImageGrid : MonoBehaviour
     private Image _image;
     private PixelatedImage _currentPixelatedImage;
     private AudioSource _audioSource;
+
     // Main grid
     [SerializeField] private GameObject mainGrid;
 
@@ -35,6 +36,8 @@ public class ImageGrid : MonoBehaviour
 
     private void InitVariables()
     {
+
+        
         if (_gridLayoutGroup == null)
             _gridLayoutGroup = mainGrid.GetComponent<GridLayoutGroup>();
 
@@ -95,6 +98,7 @@ public class ImageGrid : MonoBehaviour
         var rightPadding = 10;
         var topPadding = 10;
 
+        int offset = pixelatedImage.bounds.x < 7 ? 15 : pixelatedImage.bounds.x < 15 ? 5 : 0;
         row.GetComponent<GridLayoutGroup>().cellSize = new Vector2(wSquare, hSquare + 100);
         row.GetComponent<GridLayoutGroup>().constraint = GridLayoutGroup.Constraint.FixedRowCount;
         row.GetComponent<GridLayoutGroup>().constraintCount = 1;
@@ -103,7 +107,7 @@ public class ImageGrid : MonoBehaviour
         for (var j = 0; j < pixelatedImage.bounds.x; j++)
         {
             var indicator = Instantiate(numberIndicator, row.transform);
-            indicator.SetTransform(15, true);
+            indicator.SetTransform(offset, true);
             indicator.SetRowIndicatorNumbers(pixelatedImage, j);
             _indicators.Add(indicator);
         }
@@ -116,7 +120,7 @@ public class ImageGrid : MonoBehaviour
         for (var i = 0; i < pixelatedImage.bounds.y; i++)
         {
             var indicator = Instantiate(numberIndicator, col.transform);
-            indicator.SetTransform(15, false);
+            indicator.SetTransform(offset, false);
             indicator.SetColIndicatorNumbers(pixelatedImage, i);
             _indicators.Add(indicator);
         }
@@ -201,7 +205,7 @@ public class ImageGrid : MonoBehaviour
         }
 
         // play sound
-        if (!IsPlaying())
+        if (CanPlay())
             _audioSource.Play();
         
         // animate row finished
@@ -213,9 +217,11 @@ public class ImageGrid : MonoBehaviour
         }
     }
 
-    private bool IsPlaying()
+    private bool CanPlay()
     {
-        return _audioSource.isPlaying && (_audioSource.time / _audioSource.clip.length > .7f);
+        bool isPlaying = _audioSource.isPlaying && (_audioSource.time / _audioSource.clip.length > .7f);
+        bool soundFXOn = GameObject.Find("PlayerDataControl").GetComponent<PlayerDataControl>().PlayerData.soundFXOn;
+        return !isPlaying && soundFXOn;
     }
 
     private void MarkAllRowXCells(int markedRow, int maxRow)
@@ -235,7 +241,7 @@ public class ImageGrid : MonoBehaviour
         }
 
         // play sound
-        if (!IsPlaying())
+        if (CanPlay())
             _audioSource.Play();
         
         // animate row finished

@@ -131,6 +131,7 @@ namespace DefaultNamespace
         public void NextPage()
         {
             page += 1;
+            GameState.Instance.Update(page, Constants.LevelPageKey);
             foreach (Transform child in levelsGrid.transform)
             {
                 Destroy(child.gameObject);
@@ -142,6 +143,7 @@ namespace DefaultNamespace
         public void PrevPage()
         {
             page -= 1;
+            GameState.Instance.Update(page, Constants.LevelPageKey);
             foreach (Transform child in levelsGrid.transform)
             {
                 Destroy(child.gameObject);

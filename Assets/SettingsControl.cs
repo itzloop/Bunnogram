@@ -14,13 +14,18 @@ public class SettingsControl : MonoBehaviour
 
     [SerializeField] private Toggle musicToggle;
     [SerializeField] private Toggle soundsToggle;
-    private PlayerData playerData;
+    private PlayerDataControl playerData;
     void Start()
     {
-        playerData = GameObject.Find("PlayerDataControl").GetComponent<PlayerDataControl>().PlayerData;
+        playerData = GameObject.Find("PlayerDataControl").GetComponent<PlayerDataControl>();
         audioSource = GameState.Instance.Get<AudioSource>(Constants.BgMusicKey);
-        musicToggle.isOn = playerData.bgMusicOn;
-        soundsToggle.isOn = playerData.soundFXOn;
+        musicToggle.isOn = playerData.PlayerData.bgMusicOn;
+        soundsToggle.isOn = playerData.PlayerData.soundFXOn;
+
+        if (!playerData.PlayerData.bgMusicOn)
+        {
+            audioSource.mute = true;
+        }
     }
     
     public void onSettingsButtonClick()
@@ -36,12 +41,21 @@ public class SettingsControl : MonoBehaviour
         if (musicToggle.isOn && audioSource.mute)
         {
             audioSource.mute = false;
-            playerData.bgMusicOn = true;
+            playerData.SaveMusicOnState(true);
         }
         else if (!musicToggle.isOn && !audioSource.mute)
         {
             audioSource.mute = true;
-            playerData.soundFXOn = true;
+            playerData.SaveMusicOnState(false);
+        }
+        
+        if (soundsToggle.isOn)
+        {
+            playerData.SaveSoundFXOnState(true);
+        }
+        else if (!soundsToggle.isOn)
+        {
+            playerData.SaveSoundFXOnState(false);
         }
         // hide modal
         settingsPanel.SetActive(false);
