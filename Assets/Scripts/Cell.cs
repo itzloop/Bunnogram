@@ -25,6 +25,7 @@ public class Cell : MonoBehaviour
     [SerializeField] private Image cross;
     [SerializeField] private Image background;
     [SerializeField] private Image square;
+    [SerializeField] private AudioSource _audioSource;
 
     [SerializeField] private float scaleUpDuration = .15f;
     [SerializeField] private float scaleDownDuration = .15f;
@@ -156,15 +157,30 @@ public class Cell : MonoBehaviour
                 background.DOColor(Color.red, duration).OnComplete(() =>
                     DOTween.Sequence().Join(background.DOColor(Color.white, duration))
                         .Join(square.DOFade(1, duration)));
+                if (CanPlay())
+                {
+                    _audioSource.Play();
+                }
                 break;
             case CellMarkMode.WrongBackground:
                 background.DOColor(Color.red, duration).OnComplete(() =>
                     DOTween.Sequence().Join(background.DOColor(Color.white, duration))
                         .Join(cross.DOFade(1, duration)));
+                if (CanPlay())
+                {
+                    _audioSource.Play();
+                }
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(mode), mode, null);
         }
+    }
+    
+    private bool CanPlay()
+    {
+        bool isPlaying = _audioSource.isPlaying && (_audioSource.time / _audioSource.clip.length > .7f);
+        bool soundFXOn = GameObject.Find("PlayerDataControl").GetComponent<PlayerDataControl>().PlayerData.soundFXOn;
+        return !isPlaying && soundFXOn;
     }
 
     public void AnimateFinished(float startDelay)

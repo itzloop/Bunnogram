@@ -122,7 +122,7 @@ namespace DefaultNamespace
                 PrevPageButton.gameObject.SetActive(true);
             }
 
-            if (page > 250)
+            if (page >= 25)
             {
                 NextPageButton.gameObject.SetActive(false);
             }
