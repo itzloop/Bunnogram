@@ -19,7 +19,7 @@
 
         public static string BgMusicKey = "bg_music";
         
-        public static int numberOfLevels = 100;
+        public static int numberOfLevels = 1500;
 
         public static string LevelPageKey = "level_page";
 

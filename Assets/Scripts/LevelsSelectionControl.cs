@@ -45,6 +45,8 @@ namespace DefaultNamespace
         [SerializeField] GameObject levelsGrid;
         [SerializeField] Button levelPrefab;
         [SerializeField] private GameObject playedLevelPanel;
+        [SerializeField] private GameObject playedLevelPanelImage;
+        [SerializeField] private GameObject playedLevelPanelText;
         [SerializeField] private Button NextPageButton;
         [SerializeField] private Button PrevPageButton;
 
@@ -180,7 +182,7 @@ namespace DefaultNamespace
             for (int i = start; i < end; i++)
             {
                 var data = lines[i].Split(',');
-                bool isPlayed = false;
+                
                 Level lvl = DataToLevel(data, i - 1);
                 currLevels.Add(lvl);
                 LoadLevel(lvl);
@@ -211,6 +213,18 @@ namespace DefaultNamespace
 
         private void LoadLevel(Level level)
         {
+            // update is played
+            _playedLevels = GameObject.Find("PlayerDataControl").GetComponent<PlayerDataControl>().PlayerData
+                .playedLevels;
+            bool isPlayed = false;
+            if (_playedLevels != null && _playedLevels.Length > level.index)
+            {
+                isPlayed = _playedLevels[level.index];
+            }
+
+            level.isPlayed = isPlayed;
+            
+            
             var buttonPrefab = Instantiate(levelPrefab);
 
             buttonPrefab.name = "Level " + level.levelNumber;
@@ -237,11 +251,12 @@ namespace DefaultNamespace
             {
                 buttonPrefab.GetComponent<Button>().onClick.AddListener(() =>
                 {
-                    var panelImg = playedLevelPanel.transform.Find("Nonogram").GetComponent<Image>();
+                    var panelImg = playedLevelPanelImage.GetComponent<Image>();
                     panelImg.sprite = previewSprite;
                     panelImg.preserveAspect = true;
 
-                    playedLevelPanel.transform.Find("Name").GetComponent<RTLTextMeshPro>().text = level.name;
+                    playedLevelPanelText.GetComponent<RTLTextMeshPro>().text = level.name;
+                    playedLevelPanel.SetActive(true);
                 });
 
                 var playedTransform = buttonPrefab.transform.Find("Played");
@@ -250,6 +265,7 @@ namespace DefaultNamespace
                 img.sprite = previewSprite;
                 img.preserveAspect = true;
                 playedTransform.Find("Name").GetComponent<RTLTextMeshPro>().text = level.name;
+                
             }
 
             buttonPrefab.transform.SetParent(levelsGrid.transform);
