@@ -33,6 +33,9 @@ public class InGameHandler : MonoBehaviour
     [SerializeField] private LoseDialog loseDialog;
     [SerializeField] private GameObject winDialog;
     [SerializeField] private ImageGrid imageGrid;
+    
+    // Audio source
+    [SerializeField] private AudioSource source;
 
     private int _maxHP, _maxHints;
     private ReactiveProperty<int> _hp;
@@ -133,8 +136,7 @@ public class InGameHandler : MonoBehaviour
         var pixelatedImage = Resources.Load<PixelatedImage>($"Levels/Level_{level:000}");
         
         // setup the grid
-        Debug.Log($"current level {_level.Value} {pixelatedImage.levelName} {pixelatedImage.sprite.name}");
-        imageGrid.SetupGrid(pixelatedImage);
+        imageGrid.SetupGrid(pixelatedImage, source);
         
         // Set the default selected button
         SetBottomPanelButtonsColor(ClickMode.ForeGroundSelection);
